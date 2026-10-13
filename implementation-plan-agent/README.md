@@ -108,15 +108,43 @@ forge install
 ```
 
 
-Open Rovo Chat on your site, pick the **baseline** agent, and ask it to log a message. You should see the message appear in `forge logs`.
+Open Rovo Chat on your site, pick the **baseline** agent, and ask it to log a message. You should see the message appear in `forge logs`. Now you have a living, breathing (but very simple) Rovo agent on your Jira site. 🎉
 
-Now the fun part: evolve `baseline/` into the finished app. Compare with [`solution/`](./solution) as you go. The key steps are:
+## Make it do something useful
 
-1. Rewrite the `rovo:agent` prompt in `manifest.yml` to describe what the agent should do.
-2. Replace the single `hello-world-logger` action with two actions: `inspect-issue` (a `GET`) and `post-implementation-plan` (a `TRIGGER`).
-3. Add the `read:jira-work`, `read:jira-user`, and `write:jira-work` scopes.
-4. Write the two action handlers in `src/`, using `@forge/api`'s `asUser().requestJira(...)` to call the Jira REST API.
-5. `forge deploy && forge install --upgrade` (the upgrade is needed because you changed scopes).
+This is where it gets fun. You're going to turn that "hello world" logger into a real Jira teammate — an agent that:
+
+- **Reads a Jira ticket** so it understands the context the user is asking about.
+- **Analyzes the ticket** and drafts a thoughtful implementation plan — the kind of plan a senior engineer would write before touching any code.
+- **Writes the plan back** to the ticket as a Jira comment so the whole team can see it.
+
+That's the *what*. The *how* — the manifest changes, the scopes, the action handlers, the Jira REST calls — is where your coding agent earns its keep. **You don't need to write the code yourself.** Describe the behavior you want in plain English and let the agent do the heavy lifting.
+
+### Prompt your coding agent like a human teammate
+
+There's no single "right" prompt here. Think about what you'd ask a new developer on your team to build. A few shapes that work well:
+
+- *"I want this Rovo agent to read a Jira issue, draft an implementation plan with sections for context, approach, steps, and risks, and post it back as a comment. Update the manifest and write the action handlers."*
+- *"Add two actions to this agent — one that fetches a Jira issue's details, and one that posts a comment. Then rewrite the agent prompt so it uses them together to generate implementation plans."*
+- *"Help me evolve this baseline into something that can plan Jira tickets end-to-end. Start by walking me through what needs to change, then make the changes one at a time."*
+
+Notice how none of these say "add the `read:jira-work` scope" or "use `asUser().requestJira(...)`" — your coding agent should figure that out from the goal. If it misses a scope or a wiring detail, the Forge CLI will tell you (`forge lint` is your friend) and you can prompt the agent to fix it.
+
+### When you're done
+
+Redeploy and reinstall:
+
+```bash
+forge deploy
+```
+
+```bash
+forge install --upgrade
+```
+
+(The `--upgrade` matters whenever you've changed scopes — otherwise your site still has the old permission set.)
+
+Then test it: go to any Jira issue, open Rovo Chat or the **Agents** panel, pick your agent, and say something like *"Plan this ticket for me."* If you get stuck comparing your work-in-progress to the finished reference, [`solution/`](./solution) has the fully built version.
 
 ### Track B — Just run the finished solution
 
