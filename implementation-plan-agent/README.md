@@ -70,13 +70,43 @@ Pick a track:
 
 ### Track A — Build from the baseline (recommended for the workshop)
 
+
+Clone the repo (first time only):
+
 ```bash
-cd implementation-plan-agent/baseline
-npm install
-forge register        # First time only — writes YOUR app id into manifest.yml
-forge deploy
-forge install         # Pick your Jira Cloud site
+git clone https://github.com/atlassian-labs/forge-inspired.git
 ```
+
+Change into the baseline app directory:
+
+```bash
+cd forge-inspired/implementation-plan-agent/baseline
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Register the app under your Atlassian account (first time only — this writes your app id into `manifest.yml`):
+
+```bash
+forge register
+```
+
+Deploy the app:
+
+```bash
+forge deploy
+```
+
+Install it on your Jira Cloud site (you'll be prompted to pick the site):
+
+```bash
+forge install
+```
+
 
 Open Rovo Chat on your site, pick the **baseline** agent, and ask it to log a message. You should see the message appear in `forge logs`.
 
@@ -90,13 +120,13 @@ Now the fun part: evolve `baseline/` into the finished app. Compare with [`solut
 
 ### Track B — Just run the finished solution
 
+Follow the exact same command sequence as Track A above, but swap `baseline` for `solution` in the `cd` step:
+
 ```bash
-cd implementation-plan-agent/solution
-npm install
-forge register        # First time only — writes YOUR app id into manifest.yml
-forge deploy
-forge install         # Pick your Jira Cloud site
+cd forge-inspired/implementation-plan-agent/solution
 ```
+
+Everything else (`npm install`, `forge register`, `forge deploy`, `forge install`) is identical.
 
 Then on any Jira issue:
 

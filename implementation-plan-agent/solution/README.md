@@ -13,12 +13,28 @@ A Rovo agent that:
 
 ## Run it
 
+> **New machine?** See the [baseline README](../baseline/README.md#run-it) for the full `git clone` + `cd` + `forge` command sequence — then just swap `baseline` for `solution` when you `cd`.
+
+If you've already cloned the repo, the short version is:
+
 ```bash
-cd implementation-plan-agent/solution
+cd forge-inspired/implementation-plan-agent/solution
+```
+
+```bash
 npm install
-forge register        # First time only — writes YOUR app id into manifest.yml
+```
+
+```bash
+forge register
+```
+
+```bash
 forge deploy
-forge install         # Pick your Jira Cloud site
+```
+
+```bash
+forge install
 ```
 
 Then on any Jira issue:

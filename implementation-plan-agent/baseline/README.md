@@ -13,12 +13,42 @@ That's it. It doesn't call any Atlassian REST APIs, doesn't need any scopes beyo
 
 ## Run it
 
+Each command is in its own code block so you can copy, paste, and hit **Enter** one at a time.
+
+Clone the repo (first time only):
+
 ```bash
-cd implementation-plan-agent/baseline
+git clone https://github.com/atlassian-labs/forge-inspired.git
+```
+
+Change into the baseline app directory:
+
+```bash
+cd forge-inspired/implementation-plan-agent/baseline
+```
+
+Install dependencies:
+
+```bash
 npm install
-forge register        # First time only — writes YOUR app id into manifest.yml
+```
+
+Register the app under your Atlassian account (first time only — this writes your app id into `manifest.yml`):
+
+```bash
+forge register
+```
+
+Deploy the app:
+
+```bash
 forge deploy
-forge install         # Pick your Jira Cloud site
+```
+
+Install it on your Jira Cloud site (you'll be prompted to pick the site):
+
+```bash
+forge install
 ```
 
 Then open Rovo Chat on your site, pick the **baseline** agent, and ask it to log a message. Tail the logs to confirm:
