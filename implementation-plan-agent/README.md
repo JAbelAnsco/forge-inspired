@@ -122,13 +122,19 @@ That's the *what*. The *how* — the manifest changes, the scopes, the action ha
 
 ### Prompt your coding agent like a human teammate
 
-There's no single "right" prompt here. Think about what you'd ask a new developer on your team to build. A few shapes that work well:
+There's no single "right" prompt here. Think about what you'd ask a new developer on your team to build.
 
-- *"I want this Rovo agent to read a Jira issue, draft an implementation plan with sections for context, approach, steps, and risks, and post it back as a comment. Update the manifest and write the action handlers."*
-- *"Add two actions to this agent — one that fetches a Jira issue's details, and one that posts a comment. Then rewrite the agent prompt so it uses them together to generate implementation plans."*
-- *"Help me evolve this baseline into something that can plan Jira tickets end-to-end. Start by walking me through what needs to change, then make the changes one at a time."*
+**Important — ask for the plan before any code changes.** Most coding agents (GitHub Copilot, Rovo Dev, Cursor, etc.) will happily start editing files the moment you describe a goal. For this workshop you'll learn a lot more if the agent **explains what it's going to do first**, waits for your sign-off, and only then touches `manifest.yml` and `src/`. Make that explicit in your prompt — see the "propose first" line in every example below.
+
+A few prompt shapes that work well:
+
+- *"I want this Rovo agent to read a Jira issue, draft an implementation plan with sections for context, approach, steps, and risks, and post it back as a comment. **Before you change any files, walk me through the proposed plan — which files you'll touch, what you'll add, and which scopes and modules you'll need. Wait for me to approve before editing anything.**"*
+- *"Add two actions to this agent — one that fetches a Jira issue's details, and one that posts a comment. Then rewrite the agent prompt so it uses them together to generate implementation plans. **First, propose the full set of changes as a numbered list. Don't modify any files until I say 'go'.**"*
+- *"Help me evolve this baseline into something that can plan Jira tickets end-to-end. **Start by walking me through what needs to change — in plain English, no code yet. Once I'm happy with the plan, we'll apply the changes one at a time, pausing after each so I can review.**"*
 
 Notice how none of these say "add the `read:jira-work` scope" or "use `asUser().requestJira(...)`" — your coding agent should figure that out from the goal. If it misses a scope or a wiring detail, the Forge CLI will tell you (`forge lint` is your friend) and you can prompt the agent to fix it.
+
+💡 **If your agent starts editing anyway** (some are more eager than others), stop it with something like *"Please revert and show me the plan first before making any more changes."* Most will comply.
 
 ### When you're done
 
