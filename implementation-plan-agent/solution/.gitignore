@@ -1,7 +1,0 @@
-node_modules/
-.forge/
-dist/
-build/
-*.log
-.env
-.DS_Store
