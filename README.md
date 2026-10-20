@@ -11,7 +11,15 @@
 
 ## Start here
 
-Before any demo in this repo will run, make sure your Forge setup is complete: **[Build and launch your Forge app → Choose your build path](https://developer.atlassian.com/platform/forge/build-and-launch/)**. That page covers installing the Forge CLI, provisioning a Cloud site, and installing the Forge AI development toolkit.
+Before any demo in this repo will run, make sure your Forge setup is complete: **[Build and launch your Forge app → Choose your build path](https://developer.atlassian.com/platform/forge/build-and-launch/)**. That page covers installing the Forge CLI and provisioning a Cloud site.
+
+### Install the Forge AI Plugin (recommended)
+
+If you'll be using an AI coding agent (Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix these demos, also install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)**. It bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing.
+
+Prefer **just the MCP server** without the skills? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
+
+**Already using the [Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)?** The plugin and MCP server come preinstalled — skip this step. **Not using an AI coding agent?** The demos deploy fine with just the Forge CLI — skip this step too.
 
 ## What's in here
 
@@ -22,8 +30,8 @@ Each demo is a self-contained Forge app. Pick one, `cd` into it, and follow the 
 | [`sprint-ready-agent/`](sprint-ready-agent/) | AI native to the platform — one `rovo:agent` gives you Rovo Chat *and* the Jira ticket Agents panel. Reads freely, writes only after you confirm. | `rovo:agent`, `action` |
 | [`smart-workflow-followup/`](smart-workflow-followup/) | Reacting to real Jira events with a Forge `trigger` — no queues, no cron, no server. Per-project opt-in, editable templates, full audit trail. | `trigger`, `jira:globalPage` |
 | [`team-pulse-board/`](team-pulse-board/) | Cross-product in a single Forge app — a Confluence macro that runs a live Jira JQL search from words in the page title. Surfaces the ticket↔page connection nobody types. | `confluence:macro`, `jira:globalPage` |
-| [`implementation-plan-agent/`](implementation-plan-agent/) | A Rovo agent that reads a Jira issue's context, drafts an implementation plan grounded in organizational knowledge, and posts it back as a single comment. | `rovo:agent`, `action` |
-| [`forge-guru-agent/`](forge-guru-agent/) | A conversational Rovo agent that answers Atlassian Forge questions — manifest, modules, scopes, UI Kit, CLI — grounded in Rovo's knowledge access. Zero actions, zero scopes, zero-friction install. | `rovo:agent` |
+| [`implementation-plan-agent/`](implementation-plan-agent/) | A **Rovo agent that plans Jira tickets for you** — reads the issue, drafts a four-section implementation plan grounded in your organization's knowledge, and posts it back as a single comment. | `rovo:agent`, `action` |
+| [`forge-guru-agent/`](forge-guru-agent/) | A **conversational Rovo agent that answers your Forge questions** — manifest, modules, scopes, UI Kit, CLI, storage, Rovo. Zero actions, zero scopes, installs on any site in seconds. | `rovo:agent` |
 
 Each folder contains its own `README.md` with the concept, install instructions,
 and an `AppRequirements.md` describing what the app does and why.
@@ -55,7 +63,8 @@ forge-inspired/
 ├── sprint-ready-agent/              # demo 1
 ├── smart-workflow-followup/         # demo 2
 ├── team-pulse-board/                # demo 3
-└── ...
+├── implementation-plan-agent/       # demo 4
+└── forge-guru-agent/                # demo 5
 ```
 
 Each demo has its **own** `manifest.yml`, `package.json`, and `node_modules/` —

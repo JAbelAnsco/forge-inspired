@@ -24,7 +24,13 @@ You need three things before you can deploy this app:
   forge --version
   ```
 
-### 2. An Atlassian account and API token
+### 2. (Recommended) The Forge AI Plugin
+
+If you'll be using an AI coding agent (Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix Forge Guru, install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)** — it bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing. Prefer *just* the MCP server? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
+
+**Skip this if you're not using an AI coding agent** — the demo deploys fine with just the Forge CLI.
+
+### 3. An Atlassian account and API token
 
 - Log in to Forge with an API token from https://id.atlassian.com/manage-profile/security/api-tokens:
   ```bash
@@ -35,7 +41,7 @@ You need three things before you can deploy this app:
   forge whoami
   ```
 
-### 3. A Jira (or Confluence) Cloud site
+### 4. A Jira (or Confluence) Cloud site
 
 - Any Atlassian Cloud site you're an admin on will work. If you don't have one, provision one with:
   ```bash
@@ -44,7 +50,7 @@ You need three things before you can deploy this app:
 
 ### (Optional) Skip local setup with the Forge Codespace
 
-Prefer not to install Node and the Forge CLI on your laptop? Use the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)** — a preconfigured GitHub Codespace with Node and the Forge CLI already set up. Once you're in the Codespace, `git clone` this repo and `cd` into `forge-guru-agent/` to deploy.
+Prefer not to install Node, the Forge CLI, and the Forge AI Plugin on your laptop? Use the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)** — a preconfigured GitHub Codespace with everything already set up (the AI plugin and Forge MCP Server come preinstalled). Once you're in the Codespace, `git clone` this repo and `cd` into `forge-guru-agent/` to deploy.
 
 ## Deploy it
 
