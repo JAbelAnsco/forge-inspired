@@ -1,0 +1,19 @@
+{
+  "name": "forge-guru-agent",
+  "version": "0.1.0",
+  "description": "A Rovo agent that answers Atlassian Forge questions — explains concepts, points at docs, and helps developers build Forge apps faster.",
+  "main": "src/index.js",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "forge": "forge",
+    "deploy": "forge deploy",
+    "upgrade": "forge install --upgrade"
+  },
+  "dependencies": {
+    "@forge/api": "^8.0.4"
+  },
+  "devDependencies": {
+    "@forge/cli": "^14.1.0"
+  }
+}
