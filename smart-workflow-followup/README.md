@@ -24,6 +24,28 @@
 
 > **Prerequisite:** your Forge setup is complete — see [Build and launch your Forge app → Choose your build path](https://developer.atlassian.com/platform/forge/build-and-launch/). New to the collection? [Start here](../README.md#start-here).
 
+### Option A: Let your coding agent do it
+
+Copy the prompt below into Rovo Dev, Cursor, Claude Code, Codex, Copilot CLI, Gemini CLI, or any agent of your choice, and let it drive:
+
+```text
+Please deploy the Smart Workflow Follow-up app for me.
+
+1. Clone https://github.com/atlassian-labs/forge-inspired.git (skip if the
+   directory already exists).
+2. `cd` into `forge-inspired/smart-workflow-followup`.
+3. Run `npm install`.
+4. Run `forge register` so a fresh app id is written into `manifest.yml`
+   (skip if the manifest already has a non-placeholder app id).
+5. Run `forge deploy` to the default (development) environment.
+6. Run `forge install` and pick my Jira Cloud site when prompted.
+
+When you're done, tell me the app id, which site it was installed on, and
+where to find the admin page in Jira.
+```
+
+### Option B: Run the commands yourself
+
 ```bash
 cd smart-workflow-followup
 npm install

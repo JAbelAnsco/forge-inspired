@@ -26,7 +26,7 @@ You need three things before you can deploy this app:
 
 ### 2. (Recommended) The Forge AI Plugin
 
-If you'll be using an AI coding agent (Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix Forge Guru, install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)** — it bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing. Prefer *just* the MCP server? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
+If you'll be using an AI coding agent (Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix Forge Guru, install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)** — it bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing. Prefer *just* the MCP server? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
 
 **Skip this if you're not using an AI coding agent** — the demo deploys fine with just the Forge CLI.
 
@@ -53,6 +53,27 @@ If you'll be using an AI coding agent (Rovo Dev, Cursor, Claude Code, Codex, Git
 Prefer not to install Node, the Forge CLI, and the Forge AI Plugin on your laptop? Use the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)** — a preconfigured GitHub Codespace with everything already set up (the AI plugin and Forge MCP Server come preinstalled). Once you're in the Codespace, `git clone` this repo and `cd` into `forge-guru-agent/` to deploy.
 
 ## Deploy it
+
+### Option A: Let your coding agent do it
+
+If you've completed the prerequisites above (Forge CLI installed, Forge AI Plugin installed, `forge login` done, and a target Cloud site ready), you can hand the whole deploy off to your AI coding agent. Copy the prompt below into Rovo Dev, Cursor, Claude Code, Codex, Copilot CLI, Gemini CLI, or any agent of your choice, and let it drive:
+
+```text
+Please deploy the Forge Guru agent for me. 
+1. Clone https://github.com/atlassian-labs/forge-inspired.git (skip if the
+   directory already exists).
+2. `cd` into `forge-inspired/forge-guru-agent`.
+3. Run `npm install`.
+4. Run `forge register` so a fresh app id is written into `manifest.yml`
+   (skip if the manifest already has a non-placeholder app id).
+5. Run `forge deploy` to the default (development) environment.
+6. Run `forge install` and pick my Cloud site and product when prompted.
+
+When you're done, tell me the app id, which site it was installed on, and
+how to open it in Rovo Chat.
+```
+
+### Option B: Run the commands yourself
 
 Each command is in its own code block so you can copy, paste, and hit **Enter** one at a time.
 
