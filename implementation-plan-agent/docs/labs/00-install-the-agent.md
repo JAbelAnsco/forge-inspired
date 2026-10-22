@@ -17,6 +17,14 @@ Nothing yet. In this lab you install the Implementation Plan Agent onto your Jir
 
 ## Step 1 — install via your coding assistant
 
+> **Before you paste anything:** make sure you have a **fresh** Jira Cloud site provisioned for this workshop. If you skipped that in Setup, run it now:
+>
+> ```bash
+> forge site provision
+> ```
+>
+> …and keep the resulting `https://<name>.atlassian.net` URL handy — the install prompt will ask you to pick it. Fresh sites are strongly preferred: they're empty, they already have Rovo enabled, and they have nothing pre-installed to collide with the agent.
+
 Open your coding assistant inside the Codespace — Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive.
 
 > **Why hand it off?** The Codespace already has Node, the Forge CLI, and the Forge AI Plugin preinstalled. The install flow is deterministic — clone, `npm install`, `forge register`, `forge deploy`, `forge install`. Letting your assistant run it means fewer typos, and it gives you a feel for what "my agent did the plumbing for me" looks like before you start editing agents yourself.

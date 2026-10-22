@@ -30,17 +30,19 @@ forge whoami
 
 You should see your Atlassian account email.
 
-## 3. Have a Jira Cloud site you're an admin on
+## 3. Provision a fresh Jira Cloud site
 
-Any Atlassian Cloud site with a Jira project you can create issues in will work. If you don't have one, provision a free one right now:
+Even if you already have an Atlassian Cloud dev site, **provision a brand-new one for this workshop**. It takes about 30 seconds and gives you a clean, empty site with no existing apps installed and nothing to collide with.
+
+In the Codespace terminal:
 
 ```bash
 forge site provision
 ```
 
-Keep the resulting site URL handy — you'll install the agent onto it in Lab 0 and create a work item on it in Lab 1.
+Follow the prompts. Pick a short, memorable name — you'll see this URL a lot across both workshops. **Keep that URL handy** — you'll install the agent onto it in Lab 0 and create a work item on it in Lab 1.
 
-> **Rovo is required.** The Implementation Plan Agent is a Rovo agent, so the site needs Rovo enabled. Freshly-provisioned Cloud sites already have Rovo on by default.
+> **Rovo is required.** The Implementation Plan Agent is a Rovo agent, so the site needs Rovo enabled. Freshly-provisioned Cloud sites already have Rovo on by default — another reason to provision fresh for the workshop.
 
 You're ready to start **[Lab 0 · Install the agent](labs/00-install-the-agent.md)**. Lab 0 hands your coding assistant a prompt that clones `forge-inspired`, installs dependencies, and deploys the agent to your site in one go.
 

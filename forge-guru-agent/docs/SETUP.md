@@ -30,17 +30,19 @@ forge whoami
 
 You should see your Atlassian account email.
 
-## 3. Have a Jira Cloud site you're an admin on
+## 3. Provision a fresh Jira Cloud site
 
-Any Atlassian Cloud site you're an admin on will work. If you don't have one, provision a free one right now:
+Even if you already have an Atlassian Cloud dev site, **provision a brand-new one for this workshop**. It takes about 30 seconds and gives you a clean, empty site with no existing apps installed and nothing to collide with.
+
+In the Codespace terminal:
 
 ```bash
 forge site provision
 ```
 
-Follow the prompts. You'll end up with a URL like `https://your-name.atlassian.net`. Keep that URL handy — you'll install Forge Guru onto it in Lab 0.
+Follow the prompts. Pick a short, memorable name — you'll see this URL a lot across both workshops. You'll end up with a site at `https://your-name.atlassian.net`. **Keep that URL handy** — you'll install Forge Guru onto it in Lab 0.
 
-> **Rovo is required.** Forge Guru is a Rovo agent, so the site needs Rovo enabled. Freshly-provisioned Cloud sites already have Rovo on by default.
+> **Rovo is required.** Forge Guru is a Rovo agent, so the site needs Rovo enabled. Freshly-provisioned Cloud sites already have Rovo on by default — another reason to provision fresh for the workshop.
 
 You're ready to start **[Lab 0 · Meet Forge Guru](labs/00-meet-forge-guru.md)**. Lab 0 hands your coding assistant a prompt that clones `forge-inspired`, installs dependencies, and deploys Forge Guru to your site in one go.
 
