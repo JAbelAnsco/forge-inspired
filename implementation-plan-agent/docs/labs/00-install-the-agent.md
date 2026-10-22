@@ -12,32 +12,42 @@ Nothing yet. In this lab you install the Implementation Plan Agent onto your Jir
 
 ## You should be here
 
-- You finished **[Setup](../SETUP.md)**: Codespace open, `forge whoami` works, you have a Jira Cloud site URL, and you've cloned the repo and `cd`'d into `forge-inspired/implementation-plan-agent/`.
+- You finished **[Setup](../SETUP.md)**: Codespace open, `forge whoami` works, you have a Jira Cloud site URL handy.
+- You have **not** cloned `forge-inspired` yet — your coding assistant will do that for you in Step 1.
 
 ## Step 1 — install via your coding assistant
 
-Open the AI chat panel in your Codespace. Paste this prompt and run it:
+Open your coding assistant inside the Codespace — Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive.
+
+> **Why hand it off?** The Codespace already has Node, the Forge CLI, and the Forge AI Plugin preinstalled. The install flow is deterministic — clone, `npm install`, `forge register`, `forge deploy`, `forge install`. Letting your assistant run it means fewer typos, and it gives you a feel for what "my agent did the plumbing for me" looks like before you start editing agents yourself.
 
 ```text
-Please install the Implementation Plan Agent for me from the Codespace
-I'm in.
+Please install the Implementation Plan Agent for me from this Codespace.
 
-I'm already sitting in `forge-inspired/implementation-plan-agent/`.
+I'm in the community Forge Codespace, which has Node, the Forge CLI and
+the Forge AI Plugin preinstalled, and I've already run `forge login`.
+The agent's source lives in a different GitHub repo that I need to
+clone first.
+
 Please do the following in order, running each command in the terminal
 and stopping if any step fails:
 
-1. Run `npm install`.
-2. Run `forge register` so a fresh app id is written into `manifest.yml`
-   (skip if the manifest already has a non-placeholder app id).
-3. Run `forge deploy` to the default (development) environment.
-4. Run `forge install` and pick my Jira Cloud site when prompted. The
-   install will ask me to confirm Jira scopes — confirm them.
+1. Clone the repo: `git clone https://github.com/atlassian-labs/forge-inspired.git`
+   (skip if the directory already exists).
+2. `cd` into `forge-inspired/implementation-plan-agent`.
+3. Run `npm install`.
+4. Run `forge register` so a fresh app id is written into `manifest.yml`
+   (skip if the manifest already contains a non-placeholder app id).
+5. Run `forge deploy` to the default (development) environment.
+6. Run `forge install` and pick my Jira Cloud site when prompted. If
+   it asks me to choose a product, choose Jira. The install will ask
+   me to confirm Jira scopes — confirm them.
 
 When you're done, tell me the app id, which site it was installed on,
 and how to invoke the agent from a Jira issue's Agents panel.
 ```
 
-If `forge install` asks you to pick a product, pick **Jira**.
+Your assistant will walk through those six commands. Confirm each one when it asks.
 
 ## Step 2 — prove it responds
 

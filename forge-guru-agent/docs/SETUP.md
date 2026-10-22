@@ -2,7 +2,7 @@
 
 The whole workshop runs inside the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)**. Everything you need — Node, the Forge CLI, the Forge AI Plugin, and the Forge MCP Server — is already installed in there. You do not install anything on your laptop.
 
-Do these four things, in order, before Lab 0.
+Do these three things, in order, before Lab 0. (You don't need to clone this repo yourself — Lab 0's install prompt tells your coding assistant to do that for you.)
 
 ## 1. Open the Forge Codespace
 
@@ -42,16 +42,7 @@ Follow the prompts. You'll end up with a URL like `https://your-name.atlassian.n
 
 > **Rovo is required.** Forge Guru is a Rovo agent, so the site needs Rovo enabled. Freshly-provisioned Cloud sites already have Rovo on by default.
 
-## 4. Clone this repo into the Codespace
-
-In the Codespace terminal:
-
-```bash
-git clone https://github.com/atlassian-labs/forge-inspired.git
-cd forge-inspired/forge-guru-agent
-```
-
-You're now sitting in the Forge Guru app directory, ready to start **[Lab 0 · Meet Forge Guru](labs/00-meet-forge-guru.md)**.
+You're ready to start **[Lab 0 · Meet Forge Guru](labs/00-meet-forge-guru.md)**. Lab 0 hands your coding assistant a prompt that clones `forge-inspired`, installs dependencies, and deploys Forge Guru to your site in one go.
 
 ## Troubleshooting
 

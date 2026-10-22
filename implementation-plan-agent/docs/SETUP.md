@@ -2,7 +2,7 @@
 
 The whole workshop runs inside the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)**. Node, the Forge CLI, the Forge AI Plugin, and the Forge MCP Server are already installed in there. You do not install anything on your laptop.
 
-Do these four things, in order, before Lab 0.
+Do these three things, in order, before Lab 0. (You don't need to clone this repo yourself — Lab 0's install prompt tells your coding assistant to do that for you.)
 
 ## 1. Open the Forge Codespace
 
@@ -42,16 +42,7 @@ Keep the resulting site URL handy — you'll install the agent onto it in Lab 0 
 
 > **Rovo is required.** The Implementation Plan Agent is a Rovo agent, so the site needs Rovo enabled. Freshly-provisioned Cloud sites already have Rovo on by default.
 
-## 4. Clone this repo into the Codespace
-
-In the Codespace terminal:
-
-```bash
-git clone https://github.com/atlassian-labs/forge-inspired.git
-cd forge-inspired/implementation-plan-agent
-```
-
-You're now in the Implementation Plan Agent app directory, ready for **[Lab 0 · Install the agent](labs/00-install-the-agent.md)**.
+You're ready to start **[Lab 0 · Install the agent](labs/00-install-the-agent.md)**. Lab 0 hands your coding assistant a prompt that clones `forge-inspired`, installs dependencies, and deploys the agent to your site in one go.
 
 ## Troubleshooting
 
