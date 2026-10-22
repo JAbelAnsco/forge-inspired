@@ -29,40 +29,52 @@ Pick **one** of the three starter snippets. (If you prefer, write your own in th
 
 > **Which one should you pick?** All three are good — pick the one that fits a gap you noticed when reading your Lab 1 plan. If you're genuinely torn, pick the Testing checklist: it's the most visually obvious change, which makes the "it actually worked" moment unmissable.
 
-## Step 2 — ask your AI coding assistant to edit the prompt
+## Step 2 — paste the lab prompt into your coding assistant
 
-Open the AI chat panel in your Codespace. Paste this prompt and run it (replace the snippet path with the one you picked):
+Open your coding assistant inside the Codespace — Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive. (Replace the snippet path with the one you picked in Step 1.)
 
 ```text
-Please update `implementation-plan-agent/manifest.yml` for me.
+Please apply Lab 2 (Customize your agent) to my local Implementation
+Plan Agent checkout.
 
-Open the `prompt:` block on `rovo:agent`. Find the "WHEN A USER ASKS
-YOU TO PLAN AN ISSUE:" sequence, then step 4 inside that sequence.
-Step 4 currently defines four plan sections, ending with the
-"**Risks & open questions**" bullet.
+I'm in `forge-inspired/implementation-plan-agent/` in a Codespace.
+I've already completed Lab 0 (so `manifest.yml` has my own `app.id`
+and the stock agent is deployed) and Lab 1 (behavior-only, no file
+changes).
 
-Add a new section bullet IMMEDIATELY AFTER the "**Risks & open
-questions**" bullet, using exactly the content from this file:
+The source-of-truth snippet file is:
 
-implementation-plan-agent/docs/labs/snippets/02-prompt-testing-checklist.yml
+  docs/labs/snippets/02-prompt-testing-checklist.yml
 
-Preserve the surrounding YAML indentation. Do not change anything
-outside step 4. Show me the diff before saving.
+Please do the following in order, stopping if any step fails:
+
+1. Open `manifest.yml`. Find the `prompt: >` block on `rovo:agent`,
+   then the "WHEN A USER ASKS YOU TO PLAN AN ISSUE:" sequence inside
+   it, then step 4 inside that sequence. Step 4 currently defines
+   four plan sections, ending with the "**Risks & open questions**"
+   bullet.
+2. Insert the full contents of the snippet file above as a new
+   section bullet IMMEDIATELY AFTER the "**Risks & open questions**"
+   bullet. Preserve the surrounding YAML indentation (the prompt body
+   is indented 6 spaces, and the section bullets inside step 4 are
+   indented a further 3 spaces). Do not change anything outside step 4.
+3. Show me the full diff BEFORE saving. Wait for my confirmation
+   before writing.
+4. After I confirm, save the file, run `forge lint` to confirm the
+   YAML is valid, then run `forge deploy` to the default (development)
+   environment.
+5. Do NOT run `forge install --upgrade` — no scopes changed.
+
+When you're done, give me:
+- a one-line summary of each file you touched,
+- confirmation that `forge lint` passed and `forge deploy` succeeded,
+- a suggested Jira ticket I can invoke the agent on to compare the
+  new plan against my Lab 1 plan.
 ```
 
-Review the diff. If the new bullet is indented at the same level as the four existing section bullets (**Context / Proposed approach / Implementation steps / Risks & open questions**), you're good.
+Confirm the diff when the assistant shows it to you. If the new bullet is indented at the same level as the four existing section bullets (**Context / Proposed approach / Implementation steps / Risks & open questions**), you're good.
 
-## Step 3 — redeploy
-
-In the Codespace terminal, from `forge-inspired/implementation-plan-agent/`:
-
-```bash
-forge deploy
-```
-
-No `--upgrade`. No new scopes.
-
-## Step 4 — rerun Lab 1 and compare
+## Step 3 — rerun Lab 1 and compare
 
 1. Open a Jira ticket — ideally one you *haven't* planned before, so you get a clean comment. Or create a new one using the Lab 1 starter.
 2. Invoke the Implementation Plan Agent and ask it to plan the ticket.
