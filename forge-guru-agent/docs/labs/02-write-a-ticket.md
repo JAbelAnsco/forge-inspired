@@ -23,8 +23,9 @@ Like Lab 1, you don't type any of the YAML or JavaScript by hand — one prompt 
 
 - Lab 1 proof checklist is green. Forge Guru pitches structured ideas.
 - Your `manifest.yml` has the `## Ideation mode` section and the extra conversation starter from Lab 1.
-- You have a Jira project you can create issues in (any project in your dev site works).
 - You're sitting in `forge-inspired/forge-guru-agent/` in your Codespace terminal.
+
+> **Note:** your fresh Jira site from Lab 0 almost certainly doesn't have any projects yet. That's fine — Step 1 below walks you through creating one, so the agent has somewhere to file its ticket.
 
 ## Source-of-truth snippet files
 
@@ -34,7 +35,19 @@ The assistant will apply the exact contents of these four files:
 - **[docs/labs/snippets/02-create-ticket.js](snippets/02-create-ticket.js)** — the full `createTicket` handler, to be appended to `src/index.js`.
 - **[docs/labs/snippets/02-prompt-ticket-mode.yml](snippets/02-prompt-ticket-mode.yml)** — the `## Ticket-writing mode` section to add to the agent `prompt:` block.
 
-## Step 1 — paste the lab prompt into your coding assistant
+## Step 1 — create a Jira project for the agent to file into
+
+The agent needs an existing Jira project to create its ticket in — `forge site provision` gave you an empty site, so you need to make one now.
+
+1. Open your Jira Cloud site in a browser.
+2. Click **Projects → Create project** in the top nav.
+3. Pick any template you like — **Scrum** or **Kanban** under Software Development is a safe default.
+4. Name the project something short (e.g. `Forge Ideas`). Jira will suggest a **project key** (e.g. `FI`, `FORGE`, `IDEAS`) — **copy that key**, you'll give it to the agent in the Proof checklist.
+5. Finish the wizard. You should land on an empty board.
+
+> **Why not have the lab prompt create the project for you?** Jira project creation requires product admin UI permissions and an interactive template choice — it's a 30-second task in the browser, and no cleaner to automate.
+
+## Step 2 — paste the lab prompt into your coding assistant
 
 Open your coding assistant inside the Codespace — Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive.
 
@@ -107,10 +120,10 @@ Your assistant will walk through the sequence. Confirm the diff when it shows it
 2. Ask it to pitch three Forge app ideas for your team (same as Lab 1 proof).
 3. In the same chat, say:
 
-   > *"I like the first one. File it as a ticket in project PROJ."*
-   > *(Replace `PROJ` with a real project key from your Jira site.)*
+   > *"I like the first one. File it as a ticket in project `<YOUR_PROJECT_KEY>`."*
+   > *(Replace `<YOUR_PROJECT_KEY>` with the project key you copied in Step 1 — e.g. `FORGE`, `IDEAS`, `FI`.)*
 
-4. The agent's reply contains a line like **"Created [PROJ-123](https://your-site.atlassian.net/browse/PROJ-123)."**
+4. The agent's reply contains a line like **"Created [YOUR-123](https://your-site.atlassian.net/browse/YOUR-123)."**
 5. Open that link. The ticket exists, you're the reporter, and the description contains the Problem / Who / Modules / Scopes / Happy path fields.
 
 ## If you get stuck

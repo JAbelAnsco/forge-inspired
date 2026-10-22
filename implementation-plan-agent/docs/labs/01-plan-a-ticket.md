@@ -13,9 +13,20 @@ A Jira work item describing a feature you want built, and an AI-generated implem
 ## You should be here
 
 - Lab 0 proof checklist is green. Agent installed, responds to invocations.
-- You have a Jira project where you can create issues.
 
-## Step 1 — create a work item
+> **Note:** your fresh Jira site from Lab 0 almost certainly doesn't have any projects yet. That's fine — Step 1 below walks you through creating one before you create the work item for the agent to plan.
+
+## Step 1 — create a Jira project (if you don't already have one)
+
+The agent plans *existing* Jira work items, so you need a project to create one in. If you already have a project on your site, skip to Step 2.
+
+1. Open your Jira Cloud site in a browser.
+2. Click **Projects → Create project** in the top nav.
+3. Pick any template — **Scrum** or **Kanban** under Software Development is a safe default.
+4. Name the project something short (e.g. `Implementation Lab`). Jira will suggest a **project key** (e.g. `IL`, `IMPL`, `LAB`) — remember it; you'll create a work item inside this project in a moment.
+5. Finish the wizard. You should land on an empty board.
+
+## Step 2 — create a work item
 
 You have two options:
 
@@ -35,7 +46,7 @@ Create a new Jira ticket for a Forge app (or any other feature) you'd actually l
 
 Save the ticket. Note its issue key (e.g. `PROJ-42`).
 
-## Step 2 — ask the agent to plan it
+## Step 3 — ask the agent to plan it
 
 1. Open the ticket in Jira.
 2. Open the **Agents** panel.
