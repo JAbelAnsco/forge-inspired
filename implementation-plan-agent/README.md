@@ -1,165 +1,87 @@
-# Implementation Plan Agent
+# Implementation Plan Agent — Plan a Ticket, Then Teach the Planner
 
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](../LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](../CONTRIBUTING.md)
 
 > Part of the [**Forge Inspired**](../README.md) collection.
 
-**A Rovo agent that turns a Jira issue into an actionable implementation plan.** Call it from Rovo Chat or from the **Agents** panel on any Jira issue, ask it to plan a ticket, and it will:
-
-1. Read the issue via the `inspect-issue` action (summary, description, type, status, priority, assignee, reporter, labels).
-2. Draft a plan with four sections: **Context**, **Proposed approach**, **Implementation steps**, **Risks & open questions** — grounded in your organization's knowledge via Rovo.
-3. Post the plan back to the same issue as a **single comment** via the `post-implementation-plan` action.
-4. Reply in chat with a short "refresh to see the comment" receipt.
+**Install a Rovo agent that turns a Jira ticket into an implementation plan — then make the planner yours.** The agent reads a ticket, drafts a four-section plan, and posts it back as a single comment. In this workshop you'll install it, use it on a real feature idea, then customize its prompt so every future plan includes the lens *you* care about — a testing checklist, a security review, Forge documentation grounding, or your own invention.
 
 ![Implementation Plan Agent in action](./img/implementationPlanAgent.gif)
 
-## Prerequisites — get your machine ready
+## Start here
 
-You need three things before you can deploy this app:
+| When | Open this |
+|---|---|
+| **Before the workshop** | **[Set up your Codespace and Jira site](docs/SETUP.md)** |
+| **When the workshop begins** | **[Lab 0 · Install the agent](docs/labs/00-install-the-agent.md)** |
+| **When you need a later lab** | Jump to the [workshop labs](#workshop-labs) below |
+| **When you are stuck** | Use the [browser checkpoint](#if-you-get-stuck) for your lab |
 
-### 1. Node.js and the Forge CLI
+## Workshop labs
 
-- Install **Node.js LTS** (v20 or newer). The Forge runtime is Node 24, but the CLI itself runs on any modern LTS.
-- Install the Forge CLI globally:
-  ```bash
-  npm install -g @forge/cli
-  ```
-- Verify it's on your PATH:
-  ```bash
-  forge --version
-  ```
+Follow these in order. Checkpoint branches let you compare completed work without blowing up your local repo.
 
-### 2. (Recommended) The Forge AI Plugin
+| Lab | You build | You are done when | Browser checkpoint |
+|---|---|---|---|
+| **[0 · Install the agent](docs/labs/00-install-the-agent.md)** | Stock agent deployed and installed via your coding assistant | Agent posts a 4-section plan comment on a dummy ticket | [`implementation-plan/lab-00`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-00/implementation-plan-agent) |
+| **[1 · Plan a ticket](docs/labs/01-plan-a-ticket.md)** | A real Jira ticket + its first AI-generated plan | Comment with Context / Proposed approach / Steps / Risks on your ticket | [`implementation-plan/lab-01`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-01/implementation-plan-agent) |
+| **[2 · Customize your agent](docs/labs/02-customize-your-agent.md)** | A new section baked into every plan (testing / security / docs / your own) | Rerun of Lab 1 produces a plan containing your new section | [`implementation-plan/lab-02`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-02/implementation-plan-agent) |
 
-If you'll be using an AI coding agent (Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix this demo, install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)** — it bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing. Prefer *just* the MCP server? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
+**Main takeaway:** learn to use **requirements, context, and iteration** to improve AI-generated work.
 
-**Skip this if you're not using an AI coding agent** — the demo deploys fine with just the Forge CLI.
+## How to use a lab
 
-### 3. An Atlassian account and API token
+Every lab file follows the same shape:
 
-- Log in to Forge with an API token from https://id.atlassian.com/manage-profile/security/api-tokens:
-  ```bash
-  forge login
-  ```
-- Confirm you're logged in:
-  ```bash
-  forge whoami
-  ```
+- **What you're building** gives you the destination.
+- **Ideas you need** explains the decisions behind the design.
+- **You should be here** shows the exact state expected before you start.
+- **File:** tells you exactly where a snippet belongs.
+- **Already written** means inspect the helper; do not rebuild it.
+- **Proof checklist** tells you when it is safe to continue.
 
-### 4. A Jira Cloud site
+Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)** — including the Lab 1 starter requirement and the three Lab 2 customization snippets.
 
-- Any Jira Cloud site you're an admin on will work. If you don't have one, provision one with:
-  ```bash
-  forge site provision
-  ```
+## If you get stuck
 
-### (Optional) Skip local setup with the Forge Codespace
+1. Find your lab in the table above.
+2. Open its **Browser checkpoint** link.
+3. Navigate to the file named by the lab step you're on.
+4. Compare it with your local file.
+5. Copy only the named section — not the whole file.
 
-Prefer not to install Node, the Forge CLI, and the Forge AI Plugin on your laptop? Use the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)** — a preconfigured GitHub Codespace with everything already set up (the AI plugin and Forge MCP Server come preinstalled). Once you're in the Codespace, `git clone` this repo and `cd` into `implementation-plan-agent/` to deploy.
+> **Never copy a checkpoint's `manifest.yml` wholesale.** Lab 0 writes *your* personal app id into your local `manifest.yml`. Replacing it with the checkpoint's version gives you an app you don't own. Copy only the section the lab is teaching.
 
-## Deploy it
+The **[`implementation-plan/finished`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/finished/implementation-plan-agent)** branch is the full answer key — Lab 2 testing-checklist customization applied.
 
-### Option A: Let your coding agent do it
-
-If you've completed the prerequisites above (Forge CLI installed, Forge AI Plugin installed, `forge login` done, and a target Jira Cloud site ready), you can hand the whole deploy off to your AI coding agent. Copy the prompt below into Rovo Dev, Cursor, Claude Code, Codex, Copilot CLI, Gemini CLI, or any agent of your choice, and let it drive:
-
-```text
-Please deploy the Implementation Plan Agent for me.
-
-1. Clone https://github.com/atlassian-labs/forge-inspired.git (skip if the
-   directory already exists).
-2. `cd` into `forge-inspired/implementation-plan-agent`.
-3. Run `npm install`.
-4. Run `forge register` so a fresh app id is written into `manifest.yml`
-   (skip if the manifest already has a non-placeholder app id).
-5. Run `forge deploy` to the default (development) environment.
-6. Run `forge install` and pick my Jira Cloud site when prompted.
-
-When you're done, tell me the app id, which site it was installed on, and
-how to invoke the agent from a Jira issue's Agents panel.
-```
-
-### Option B: Run the commands yourself
-
-Each command is in its own code block so you can copy, paste, and hit **Enter** one at a time.
-
-Clone the repo (first time only):
-
-```bash
-git clone https://github.com/atlassian-labs/forge-inspired.git
-```
-
-Change into the app directory:
-
-```bash
-cd forge-inspired/implementation-plan-agent
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Register the app under your Atlassian account (first time only — this writes your own app id into `manifest.yml`):
-
-```bash
-forge register
-```
-
-Deploy the app:
-
-```bash
-forge deploy
-```
-
-Install it on your Jira Cloud site (you'll be prompted to pick the site):
-
-```bash
-forge install
-```
-
-## Try it
-
-On any Jira issue:
-
-1. Open the issue's **Agents** panel (or open Rovo Chat).
-2. Choose **Implementation Plan Agent**.
-3. Say something like `Plan this ticket for me` or `Plan PROJ-123 for me`.
-4. Watch the agent read the issue, draft the plan, and post it back as one comment. Refresh the page to see it.
-
-## Under the hood
+## Under the hood (reference)
 
 - **Modules:** [`rovo:agent`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/rovo-agent/) + [`action`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/action/) × 2 + [`function`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/function/) × 2.
 - **Scopes:** `read:jira-work`, `read:jira-user`, `write:jira-work`. Only `post-implementation-plan` ever exercises the write scope.
-- Every Jira call uses `asUser()`, so the agent's effective permissions are bounded by the invoking user's Jira permissions.
-- The write path is deliberately narrow: it only posts comments. It cannot edit the description, transition the issue, or change any field.
+- Every Jira call uses `asUser()`, so the agent's effective permissions are bounded by the invoking user's.
+- The write path is deliberately narrow — it only posts comments. It cannot edit the description, transition the issue, or change any field.
+- **Entry points:**
+  - [`manifest.yml`](./manifest.yml) — agent prompt, 2 actions, 3 scopes.
+  - [`src/actions/inspect-issue.js`](./src/actions/inspect-issue.js) — the read path.
+  - [`src/actions/post-implementation-plan.js`](./src/actions/post-implementation-plan.js) — the sole write path.
+  - [`src/jira.js`](./src/jira.js) — shared helpers for base URLs and ADF conversion.
+  - [`src/index.js`](./src/index.js) — exports wiring.
+- **Full command cheatsheet:** [docs/reference/COMMANDS.md](docs/reference/COMMANDS.md).
+- **Common issues:** [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md).
 
-### The interesting files
+## After the workshop
 
-- **[`manifest.yml`](./manifest.yml)** — the agent prompt, two `action`s, and the three Jira scopes it needs.
-- **[`src/actions/inspect-issue.js`](./src/actions/inspect-issue.js)** — the read path. One `GET` to `/rest/api/3/issue/{key}` with an explicit field list, then a lean JSON return.
-- **[`src/actions/post-implementation-plan.js`](./src/actions/post-implementation-plan.js)** — the sole write path. One `POST` to `/rest/api/3/issue/{key}/comment`. Adds a small "drafted by the Implementation Plan Agent" marker line so agent-authored comments are easy to spot in ticket history.
-- **[`src/jira.js`](./src/jira.js)** — shared helpers for `baseUrlFromSelf`, flattening ADF descriptions, and wrapping the plan Markdown for the comment POST.
-- **[`src/index.js`](./src/index.js)** — the Forge function entry points; just wires exports to handler modules.
+```bash
+forge uninstall           # remove the development install from your Jira site
+forge install list        # confirm no development installation remains
+```
 
-## Extend it
+Then stop the Codespace from the GitHub UI (**Codespaces → Stop current codespace**) so it stops counting against your free hours.
 
-Already deployed and want to push it further? A few natural next steps — try asking your AI coding agent (Rovo Dev, Cursor, Copilot, etc.) to add one of these:
+## Where to go next
 
-- **Include custom fields in the read** — add the field IDs to the `fieldList` in `inspect-issue.js` and surface them in the return object.
-- **Format the comment as richer ADF** — swap the Markdown-to-ADF wrapper for a converter that handles headings, lists, and code blocks natively.
-- **Add a third action** — e.g. an `estimate-effort` action that returns a story-point estimate the agent can mention alongside the plan.
-- **"Propose then confirm" flow** — take a leaf out of [`sprint-ready-agent`](../sprint-ready-agent) and require the user to type `apply` in chat before the comment is posted.
-
-After any manifest change, redeploy (`forge deploy`) and, if you changed scopes, run `forge install --upgrade`.
-
-## Troubleshooting
-
-- **The agent doesn't show up in Rovo.** Confirm your site has Rovo enabled and that `forge install` succeeded on the site you're testing. Try `forge install list` to check.
-- **Scope errors after adding scopes.** You need to `forge install --upgrade` (not just re-deploy) whenever you change `permissions.scopes` in `manifest.yml`.
-- **Nothing happens when you invoke the action.** Tail the logs: `forge logs --since 15m`. The action handler will log any error it hits.
-- **`forge lint` complains about the manifest.** Manifests are strict YAML. Check indentation and make sure every `function` key referenced from an `action` exists under `modules.function`.
+- **[Forge Guru](../forge-guru-agent/README.md)** — the companion workshop. The agent you built here *reads* a ticket and plans it; that one *writes* a ticket from an idea you brainstormed. Together they cover both ends of the loop.
+- Browse the full **[Forge Inspired](../README.md)** collection for more small, remixable Forge apps.
 
 ## License
 

@@ -1,0 +1,29 @@
+# Lab 2 customization — Security review lens
+#
+# Paste the block below INTO step 4 of the "WHEN A USER ASKS YOU TO PLAN AN
+# ISSUE" sequence in the `prompt:` block of `rovo:agent` in `manifest.yml`,
+# as a new section item.
+#
+# Add it RIGHT AFTER the "Risks & open questions" bullet so every plan now
+# ends with an explicit security section.
+#
+# Preserve indentation. The prompt body is indented 6 spaces under `prompt: >`,
+# and the section bullets inside step 4 are indented a further 3 spaces.
+
+           - **Security considerations** — a short list (3–5 bullets) of
+             security questions this change MUST answer before shipping.
+             Call out, where relevant:
+
+             * The OAuth scopes the implementation would need, and
+               whether a less-privileged scope would do.
+             * Whether the code should run as the invoking user
+               (`.asUser()`) or as the app (`.asApp()`), and why.
+             * Any user-supplied input that would reach a product REST
+               API, and how it should be validated.
+             * Any egress to third-party domains, and whether an
+               egress permission needs to be declared in the manifest.
+             * Any sensitive data (tokens, PII, customer content) that
+               would be stored, and in which Forge storage primitive.
+
+             If a bullet does not apply to this ticket, SKIP it rather
+             than inventing a reason.

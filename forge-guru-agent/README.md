@@ -1,155 +1,79 @@
-# Forge Guru
+# Forge Guru — Build Your First Forge Agent
 
 [![Atlassian license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square)](../LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](../CONTRIBUTING.md)
 
 > Part of the [**Forge Inspired**](../README.md) collection.
 
-**A Rovo agent that answers your Atlassian Forge questions.** Think of Forge Guru as a Forge-specialist teammate who lives in Rovo Chat — ask it about the manifest, modules, scopes, UI Kit, storage, the Forge CLI, deployment, anything — and get grounded, concrete answers without leaving the product.
+**Deploy a Rovo agent — then make it yours.** Forge Guru is a Forge-specialist Rovo agent that answers Forge questions in Rovo Chat. In this workshop you'll install it, then teach it two new tricks: pitching Forge app *ideas* on demand, and **actually filing a Jira ticket** for an idea you picked. Three short labs, no local installs, everything runs in a GitHub Codespace.
 
-Forge Guru is **conversational only** — it has no actions and no scopes, so it installs with zero friction and never touches product data.
+## Start here
 
-## Prerequisites — get your machine ready
+| When | Open this |
+|---|---|
+| **Before the workshop** | **[Set up your Codespace and Jira site](docs/SETUP.md)** |
+| **When the workshop begins** | **[Lab 0 · Meet Forge Guru](docs/labs/00-meet-forge-guru.md)** |
+| **When you need a later lab** | Jump to the [workshop labs](#workshop-labs) below |
+| **When you are stuck** | Use the [browser checkpoint](#if-you-get-stuck) for your lab |
 
-You need three things before you can deploy this app:
+## Workshop labs
 
-### 1. Node.js and the Forge CLI
+Follow these in order. Checkpoint branches let you compare completed work without blowing up your local repo.
 
-- Install **Node.js LTS** (v20 or newer). The Forge runtime is Node 24, but the CLI itself runs on any modern LTS.
-- Install the Forge CLI globally:
-  ```bash
-  npm install -g @forge/cli
-  ```
-- Verify it's on your PATH:
-  ```bash
-  forge --version
-  ```
+| Lab | You build | You are done when | Browser checkpoint |
+|---|---|---|---|
+| **[0 · Meet Forge Guru](docs/labs/00-meet-forge-guru.md)** | Stock agent deployed and installed via your coding assistant | Forge Guru replies in Rovo Chat on your dev site | [`forge-guru/lab-00`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-00/forge-guru-agent) |
+| **[1 · Ideation mode](docs/labs/01-ideation-mode.md)** | A `## Ideation mode` section added to the agent prompt | Guru pitches 3 structured Forge app ideas on demand | [`forge-guru/lab-01`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-01/forge-guru-agent) |
+| **[2 · Write a ticket](docs/labs/02-write-a-ticket.md)** | A real `create-ticket` action + `write:jira-work` scope | Guru files a Jira ticket for an idea and replies with the link | [`forge-guru/lab-02`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-02/forge-guru-agent) |
 
-### 2. (Recommended) The Forge AI Plugin
+**Main takeaway:** learn to **build and extend** a Forge app — the prompt, the manifest, and the actions are all levers you control.
 
-If you'll be using an AI coding agent (Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix Forge Guru, install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)** — it bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing. Prefer *just* the MCP server? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
+## How to use a lab
 
-**Skip this if you're not using an AI coding agent** — the demo deploys fine with just the Forge CLI.
+Every lab file follows the same shape:
 
-### 3. An Atlassian account and API token
+- **What you're building** gives you the destination.
+- **Ideas you need** explains the decisions behind the design.
+- **You should be here** shows the exact state expected before you start.
+- **File:** tells you exactly where a snippet belongs.
+- **Already written** means inspect the helper; do not rebuild it.
+- **Proof checklist** tells you when it is safe to continue.
 
-- Log in to Forge with an API token from https://id.atlassian.com/manage-profile/security/api-tokens:
-  ```bash
-  forge login
-  ```
-- Confirm you're logged in:
-  ```bash
-  forge whoami
-  ```
+Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)**. Each snippet is paste-ready — don't retype them, copy them.
 
-### 4. A Jira (or Confluence) Cloud site
+## If you get stuck
 
-- Any Atlassian Cloud site you're an admin on will work. If you don't have one, provision one with:
-  ```bash
-  forge site provision
-  ```
+1. Find your lab in the table above.
+2. Open its **Browser checkpoint** link.
+3. Navigate to the file named by the lab step you're on.
+4. Compare it with your local file.
+5. Copy only the named section — not the whole file.
 
-### (Optional) Skip local setup with the Forge Codespace
+> **Never copy a checkpoint's `manifest.yml` wholesale.** Lab 0 writes *your* personal app id into your local `manifest.yml`. Replacing it with the checkpoint's version gives you an app you don't own — the subsequent labs will deploy to the wrong app id. Copy only the section the lab is teaching.
 
-Prefer not to install Node, the Forge CLI, and the Forge AI Plugin on your laptop? Use the community **[Forge Codespace](https://github.com/ccurti-dx/forge-codespace/tree/main)** — a preconfigured GitHub Codespace with everything already set up (the AI plugin and Forge MCP Server come preinstalled). Once you're in the Codespace, `git clone` this repo and `cd` into `forge-guru-agent/` to deploy.
+The **[`forge-guru/finished`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/finished/forge-guru-agent)** branch is the full answer key — all three labs applied.
 
-## Deploy it
+## Under the hood (reference)
 
-### Option A: Let your coding agent do it
+- **Modules:** [`rovo:agent`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/rovo-agent/) + [`function`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/function/). Lab 2 adds [`action`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/action/).
+- **Scopes:** none in Labs 0 and 1. Lab 2 adds `write:jira-work`.
+- **Grounding:** Rovo's built-in access to the organization's knowledge base and the public Forge documentation.
+- **Entry points:** [`manifest.yml`](./manifest.yml) (the agent definition) and [`src/index.js`](./src/index.js) (the Forge function handlers).
+- **Full command cheatsheet:** [docs/reference/COMMANDS.md](docs/reference/COMMANDS.md).
+- **Common issues:** [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md).
 
-If you've completed the prerequisites above (Forge CLI installed, Forge AI Plugin installed, `forge login` done, and a target Cloud site ready), you can hand the whole deploy off to your AI coding agent. Copy the prompt below into Rovo Dev, Cursor, Claude Code, Codex, Copilot CLI, Gemini CLI, or any agent of your choice, and let it drive:
-
-```text
-Please deploy the Forge Guru agent for me. 
-1. Clone https://github.com/atlassian-labs/forge-inspired.git (skip if the
-   directory already exists).
-2. `cd` into `forge-inspired/forge-guru-agent`.
-3. Run `npm install`.
-4. Run `forge register` so a fresh app id is written into `manifest.yml`
-   (skip if the manifest already has a non-placeholder app id).
-5. Run `forge deploy` to the default (development) environment.
-6. Run `forge install` and pick my Cloud site and product when prompted.
-
-When you're done, tell me the app id, which site it was installed on, and
-how to open it in Rovo Chat.
-```
-
-### Option B: Run the commands yourself
-
-Each command is in its own code block so you can copy, paste, and hit **Enter** one at a time.
-
-Clone the repo (first time only):
+## After the workshop
 
 ```bash
-git clone https://github.com/atlassian-labs/forge-inspired.git
+forge uninstall             # remove the development install
+forge install list          # confirm no development installation remains
 ```
 
-Change into the app directory:
+Then stop the Codespace from the GitHub UI (**Codespaces → Stop current codespace**) so it stops counting against your free hours.
 
-```bash
-cd forge-inspired/forge-guru-agent
-```
+## Where to go next
 
-Install dependencies:
-
-```bash
-npm install
-```
-
-Register the app under your Atlassian account (first time only — this writes your own app id into `manifest.yml`):
-
-```bash
-forge register
-```
-
-Deploy the app:
-
-```bash
-forge deploy
-```
-
-Install it on your Atlassian Cloud site (you'll be prompted to pick the site and product):
-
-```bash
-forge install
-```
-
-## Try it
-
-1. Open **Rovo Chat** on your site.
-2. Pick **Forge Guru** from the agent list.
-3. Try one of the built-in conversation starters, or ask your own Forge question:
-   - *"What's the difference between UI Kit and Custom UI?"*
-   - *"How do I add a scope to my Forge app?"*
-   - *"Explain Forge triggers vs scheduled triggers."*
-   - *"Show me a minimal `rovo:agent` manifest."*
-   - *"Why does my app render blank when I use `<div>` in UI Kit?"*
-
-## Under the hood
-
-- **Modules:** [`rovo:agent`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/rovo-agent/) + [`function`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/function/) × 1 (a required but intentionally-unused placeholder — see [`src/index.js`](./src/index.js)).
-- **Scopes:** **none**. Forge Guru does not call any product REST APIs.
-- **Grounding:** Rovo's built-in access to the organization's knowledge base and the public Forge documentation. The agent prompt tells it to prefer linking to canonical docs over guessing.
-
-### The interesting files
-
-- **[`manifest.yml`](./manifest.yml)** — the agent definition. 90% of the "magic" lives in the `prompt:` block, which frames Forge Guru's domain, tone, and gotcha list.
-- **[`src/index.js`](./src/index.js)** — the Forge function entry point. For Forge Guru this is just the placeholder handler Forge requires on every app.
-
-## Extend it
-
-A few natural next steps if you want to push Forge Guru further — try asking your AI coding agent (Rovo Dev, Cursor, Copilot, etc.) to add one:
-
-- **Add a `search-forge-docs` action** that calls out to a docs search endpoint, so Forge Guru can retrieve a fresh snippet and quote it back with a link.
-- **Add a `generate-starter-manifest` action** that takes a free-text description and returns a minimal `manifest.yml` for the closest template.
-- **Pin a few repo-specific conventions** by editing the system prompt — if your team always uses `@forge/kvs`, mention that; if you have a shared helper package, tell Forge Guru about it.
-
-After any manifest change, redeploy (`forge deploy`) and, if you changed scopes, run `forge install --upgrade`.
-
-## Troubleshooting
-
-- **Forge Guru doesn't show up in Rovo.** Confirm your site has Rovo enabled and that `forge install` succeeded on the site you're testing. Try `forge install list` to check.
-- **Agent replies feel generic / not Forge-specific.** The system prompt in `manifest.yml` is the biggest lever — tighten or extend it, redeploy with `forge deploy`, and try again. (No `--upgrade` needed because scopes haven't changed.)
-- **`forge lint` complains about the manifest.** Manifests are strict YAML. Check indentation and make sure every `function` key referenced from a module exists under `modules.function`.
+- **[Implementation Plan Agent](../implementation-plan-agent/README.md)** — the companion workshop. The agent you built here *writes* tickets; that one *reads* a ticket and drafts an implementation plan.
+- Browse the full **[Forge Inspired](../README.md)** collection for more small, remixable Forge apps.
 
 ## License
 

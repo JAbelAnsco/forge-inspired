@@ -1,0 +1,20 @@
+# Lab 2 customization — Testing checklist
+#
+# Paste the block below INTO step 4 of the "WHEN A USER ASKS YOU TO PLAN AN
+# ISSUE" sequence in the `prompt:` block of `rovo:agent` in `manifest.yml`,
+# as a new section item.
+#
+# Specifically, add it RIGHT AFTER the "Risks & open questions" bullet, so
+# every plan now ends with a testing-checklist section as well.
+#
+# Preserve indentation. The prompt body is indented 6 spaces under `prompt: >`,
+# and the section bullets inside step 4 are indented a further 3 spaces.
+
+           - **Testing checklist** — an ordered list of at least four
+             concrete tests an engineer should run before marking the
+             ticket done. Include at least one unit test suggestion,
+             one integration or end-to-end test suggestion, and one
+             negative-path test (what should happen when things go
+             wrong — bad input, missing permission, upstream API down).
+             Where a test touches a specific Forge module or API, name
+             the module and API by their exact manifest key or route.

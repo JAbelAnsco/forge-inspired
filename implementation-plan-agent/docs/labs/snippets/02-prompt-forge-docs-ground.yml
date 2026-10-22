@@ -1,0 +1,26 @@
+# Lab 2 customization — Forge documentation grounding
+#
+# Paste the block below INTO step 4 of the "WHEN A USER ASKS YOU TO PLAN AN
+# ISSUE" sequence in the `prompt:` block of `rovo:agent` in `manifest.yml`,
+# as a new section item.
+#
+# Add it RIGHT AFTER the "Risks & open questions" bullet so every plan now
+# ends with explicit Forge documentation references.
+#
+# Preserve indentation. The prompt body is indented 6 spaces under `prompt: >`,
+# and the section bullets inside step 4 are indented a further 3 spaces.
+
+           - **Relevant Forge documentation** — a short list of links to
+             official Forge documentation that this implementation would
+             rely on. For each link:
+
+             * Give the page's title.
+             * Give the full URL on `developer.atlassian.com`.
+             * In one line, say which decision in the plan the page
+               informs (e.g. "informs the choice of module in Proposed
+               approach", "clarifies the scope needed for step 2").
+
+             Only cite docs you are confident exist on
+             `developer.atlassian.com`. If you are unsure a page exists
+             at a specific URL, cite the top-level docs section instead
+             and let the engineer navigate from there.

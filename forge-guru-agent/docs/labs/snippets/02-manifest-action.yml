@@ -1,0 +1,64 @@
+# Lab 2 snippet — three edits to `manifest.yml`.
+#
+# ─── EDIT A ─────────────────────────────────────────────────────────────────
+# Under `rovo:agent` → the single agent entry, add an `action:` list that
+# references the new `create-ticket` action by key. Place it right after the
+# `prompt:` block and before `conversationStarters:`.
+
+      action:
+        - create-ticket
+
+# ─── EDIT B ─────────────────────────────────────────────────────────────────
+# Add a new `conversationStarters:` line at the bottom of the existing list.
+
+        - Turn my app idea into a Jira ticket
+
+# ─── EDIT C ─────────────────────────────────────────────────────────────────
+# Add a top-level `modules.action` list (sibling of `modules.function` and
+# `modules.rovo:agent`). Also add the handler function definition under
+# `modules.function`.
+
+  action:
+    - key: create-ticket
+      name: Create ticket
+      description: >
+        Create a Jira work item for a Forge app idea the user picked.
+        Takes a project key, summary, description, and issue type.
+      function: create-ticket-fn
+      actionVerb: CREATE
+      inputs:
+        projectKey:
+          title: Project key
+          type: string
+          required: true
+          description: Jira project key (e.g. PROJ) to create the ticket in.
+        summary:
+          title: Summary
+          type: string
+          required: true
+          description: One-line title of the ticket.
+        description:
+          title: Description
+          type: string
+          required: true
+          description: Full Jira description (Markdown-ish is fine).
+        issueType:
+          title: Issue type
+          type: string
+          required: false
+          description: Issue type name. Defaults to Task.
+
+  function:
+    # Existing placeholder stays — Forge still requires it even now that
+    # we have a real action. Add the handler below alongside it.
+    - key: placeholder
+      handler: index.placeholder
+    - key: create-ticket-fn
+      handler: index.createTicket
+
+# ─── EDIT D ─────────────────────────────────────────────────────────────────
+# Add the Jira write scope under `permissions.scopes`.
+
+permissions:
+  scopes:
+    - write:jira-work
