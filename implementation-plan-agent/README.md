@@ -15,17 +15,17 @@
 | **Before the workshop** | **[Set up your Codespace and Jira site](docs/SETUP.md)** |
 | **When the workshop begins** | **[Lab 0 · Install the agent](docs/labs/00-install-the-agent.md)** |
 | **When you need a later lab** | Jump to the [workshop labs](#workshop-labs) below |
-| **When you are stuck** | Use the [browser checkpoint](#if-you-get-stuck) for your lab |
+| **When you are stuck** | See the [if you get stuck](#if-you-get-stuck) section below |
 
 ## Workshop labs
 
-Follow these in order. Checkpoint branches let you compare completed work without blowing up your local repo.
+Follow these in order.
 
-| Lab | You build | You are done when | Browser checkpoint |
-|---|---|---|---|
-| **[0 · Install the agent](docs/labs/00-install-the-agent.md)** | Stock agent deployed and installed via your coding assistant | Agent posts a 4-section plan comment on a dummy ticket | [`implementation-plan/lab-00`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-00/implementation-plan-agent) |
-| **[1 · Plan a ticket](docs/labs/01-plan-a-ticket.md)** | A real Jira ticket + its first AI-generated plan | Comment with Context / Proposed approach / Steps / Risks on your ticket | [`implementation-plan/lab-01`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-01/implementation-plan-agent) |
-| **[2 · Customize your agent](docs/labs/02-customize-your-agent.md)** | A new section baked into every plan (testing / security / docs / your own) | Rerun of Lab 1 produces a plan containing your new section | [`implementation-plan/lab-02`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-02/implementation-plan-agent) |
+| Lab | You build | You are done when |
+|---|---|---|
+| **[0 · Install the agent](docs/labs/00-install-the-agent.md)** | Stock agent deployed and installed via your coding assistant | Agent posts a 4-section plan comment on a dummy ticket |
+| **[1 · Plan a ticket](docs/labs/01-plan-a-ticket.md)** | A real Jira ticket + its first AI-generated plan | Comment with Context / Proposed approach / Steps / Risks on your ticket |
+| **[2 · Customize your agent](docs/labs/02-customize-your-agent.md)** | A new section baked into every plan (testing / security / docs / your own) | Rerun of Lab 1 produces a plan containing your new section |
 
 **Main takeaway:** learn to use **requirements, context, and iteration** to improve AI-generated work.
 
@@ -44,15 +44,13 @@ Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)** — including
 
 ## If you get stuck
 
-1. Find your lab in the table above.
-2. Open its **Browser checkpoint** link.
-3. Navigate to the file named by the lab step you're on.
-4. Compare it with your local file.
-5. Copy only the named section — not the whole file.
+1. Re-read the **Proof checklist** at the bottom of the lab you're on — most issues are a missed step.
+2. Run `forge lint` from the app directory — it will point at a malformed `manifest.yml`.
+3. Tail the logs with `forge logs --since 15m` — any runtime failure in an action handler will land there.
+4. Check [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md) for the most common issues.
+5. If you're in a live workshop, flag your instructor. Otherwise, [open an issue](https://github.com/atlassian-labs/forge-inspired/issues/new).
 
-> **Never copy a checkpoint's `manifest.yml` wholesale.** Lab 0 writes *your* personal app id into your local `manifest.yml`. Replacing it with the checkpoint's version gives you an app you don't own. Copy only the section the lab is teaching.
-
-The **[`implementation-plan/finished`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/finished/implementation-plan-agent)** branch is the full answer key — Lab 2 testing-checklist customization applied.
+> **Heads up on `manifest.yml`.** Lab 0 writes *your* personal app id into your local `manifest.yml`. If you ever paste in a `manifest.yml` from somewhere else (another attendee's copy, a snippet file, an old backup), you'll lose your `app.id` and your deploys will go to someone else's app. Edit the file in place — don't replace it wholesale.
 
 ## Under the hood (reference)
 

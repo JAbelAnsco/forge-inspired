@@ -35,9 +35,11 @@ Scope changes always need `install --upgrade`, not just `deploy`.
 
 ## I think I broke my local files
 
-Use the browser checkpoints listed in the lab tables in [the README](../../README.md). They let you compare your file against a known-good one without blowing up your local repo.
+- Diff your file against the snippet files under [docs/labs/snippets/](../labs/snippets/) that the lab had you paste from.
+- `git diff` from the repo root will show you exactly what you've changed since you cloned.
+- Worst-case recovery: `git stash` your local edits, then re-run the lab from the snippet file.
 
-**Never copy a checkpoint's `manifest.yml`.** Your local manifest contains your own app id (written there by `forge register` in Lab 0). Replacing it gives you an app you don't own.
+**Heads up: don't replace your `manifest.yml` wholesale.** Your local manifest contains your own `app.id` (written there by `forge register` in Lab 0). If you overwrite it with somebody else's `manifest.yml`, your deploys will go to the wrong app id. Edit in place.
 
 ## My logs are empty
 

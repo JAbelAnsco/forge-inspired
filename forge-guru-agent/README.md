@@ -13,17 +13,17 @@
 | **Before the workshop** | **[Set up your Codespace and Jira site](docs/SETUP.md)** |
 | **When the workshop begins** | **[Lab 0 · Meet Forge Guru](docs/labs/00-meet-forge-guru.md)** |
 | **When you need a later lab** | Jump to the [workshop labs](#workshop-labs) below |
-| **When you are stuck** | Use the [browser checkpoint](#if-you-get-stuck) for your lab |
+| **When you are stuck** | See the [if you get stuck](#if-you-get-stuck) section below |
 
 ## Workshop labs
 
-Follow these in order. Checkpoint branches let you compare completed work without blowing up your local repo.
+Follow these in order.
 
-| Lab | You build | You are done when | Browser checkpoint |
-|---|---|---|---|
-| **[0 · Meet Forge Guru](docs/labs/00-meet-forge-guru.md)** | Stock agent deployed and installed via your coding assistant | Forge Guru replies in Rovo Chat on your dev site | [`forge-guru/lab-00`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-00/forge-guru-agent) |
-| **[1 · Ideation mode](docs/labs/01-ideation-mode.md)** | A `## Ideation mode` section added to the agent prompt | Guru pitches 3 structured Forge app ideas on demand | [`forge-guru/lab-01`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-01/forge-guru-agent) |
-| **[2 · Write a ticket](docs/labs/02-write-a-ticket.md)** | A real `create-ticket` action + `write:jira-work` scope | Guru files a Jira ticket for an idea and replies with the link | [`forge-guru/lab-02`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-02/forge-guru-agent) |
+| Lab | You build | You are done when |
+|---|---|---|
+| **[0 · Meet Forge Guru](docs/labs/00-meet-forge-guru.md)** | Stock agent deployed and installed via your coding assistant | Forge Guru replies in Rovo Chat on your dev site |
+| **[1 · Ideation mode](docs/labs/01-ideation-mode.md)** | A `## Ideation mode` section added to the agent prompt | Guru pitches 3 structured Forge app ideas on demand |
+| **[2 · Write a ticket](docs/labs/02-write-a-ticket.md)** | A real `create-ticket` action + `write:jira-work` scope | Guru files a Jira ticket for an idea and replies with the link |
 
 **Main takeaway:** learn to **build and extend** a Forge app — the prompt, the manifest, and the actions are all levers you control.
 
@@ -42,15 +42,13 @@ Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)**. Each snippet
 
 ## If you get stuck
 
-1. Find your lab in the table above.
-2. Open its **Browser checkpoint** link.
-3. Navigate to the file named by the lab step you're on.
-4. Compare it with your local file.
-5. Copy only the named section — not the whole file.
+1. Re-read the **Proof checklist** at the bottom of the lab you're on — most issues are a missed step.
+2. Run `forge lint` from the app directory — it will point at a malformed `manifest.yml`.
+3. Tail the logs with `forge logs --since 15m` — any runtime failure in an action handler will land there.
+4. Check [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md) for the most common issues.
+5. If you're in a live workshop, flag your instructor. Otherwise, [open an issue](https://github.com/atlassian-labs/forge-inspired/issues/new).
 
-> **Never copy a checkpoint's `manifest.yml` wholesale.** Lab 0 writes *your* personal app id into your local `manifest.yml`. Replacing it with the checkpoint's version gives you an app you don't own — the subsequent labs will deploy to the wrong app id. Copy only the section the lab is teaching.
-
-The **[`forge-guru/finished`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/finished/forge-guru-agent)** branch is the full answer key — all three labs applied.
+> **Heads up on `manifest.yml`.** Lab 0 writes *your* personal app id into your local `manifest.yml`. If you ever paste in a `manifest.yml` from somewhere else (another attendee's copy, a snippet file, an old backup), you'll lose your `app.id` and your deploys will go to someone else's app. Edit the file in place — don't replace it wholesale.
 
 ## Under the hood (reference)
 

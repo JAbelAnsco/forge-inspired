@@ -63,9 +63,9 @@ If the reply looks like a plain prose answer instead of the structured shape, th
 
 ## If you get stuck
 
-Compare your `manifest.yml` against the browser checkpoint **[`forge-guru/lab-01`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-01/forge-guru-agent/manifest.yml)**.
-
-**Never copy the checkpoint's `manifest.yml` wholesale.** Your local one has your personal `app.id` (written in Lab 0 by `forge register`). Replacing it gives you an app you don't own. Copy only the `## Ideation mode` section into your file.
+- Run `forge lint` — if the new section's indentation is off, it'll point at the line.
+- Open **[docs/labs/snippets/01-prompt-ideation.yml](snippets/01-prompt-ideation.yml)** and recheck that your pasted section matches it exactly (including the leading 8 spaces).
+- Still stuck? Flag your instructor, or see [docs/reference/TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md).
 
 ## What you just learned
 

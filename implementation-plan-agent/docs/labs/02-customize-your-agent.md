@@ -81,7 +81,7 @@ No `--upgrade`. No new scopes.
 - **Indentation errors.** Run `forge lint` — it will tell you which line YAML can't parse.
 - **The plan has your section but the content is thin.** Your snippet's expectations are the ceiling. If you want more depth, strengthen the snippet (e.g. "at least 6 tests" instead of 4), redeploy, and try again. This is the iteration loop the lab is teaching.
 
-Compare against **[`implementation-plan/lab-02`](https://github.com/atlassian-labs/forge-inspired/tree/implementation-plan/lab-02/implementation-plan-agent/manifest.yml)** if the structure of your `manifest.yml` looks off. (The checkpoint ships the testing-checklist snippet applied.) **Never copy the checkpoint `manifest.yml` wholesale** — your local one holds your personal `app.id`.
+Re-open the snippet file you pasted from and diff your `manifest.yml` section against it. If the YAML won't parse at all, `forge lint` will point at the first offending line. Still stuck? See [docs/reference/TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md) or flag your instructor.
 
 ## What you just learned
 

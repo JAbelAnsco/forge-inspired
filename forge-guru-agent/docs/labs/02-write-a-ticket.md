@@ -85,7 +85,7 @@ Confirm the new scope grant when the install prompts you.
 - **Jira rejects with 400.** Usually your project key doesn't exist, or your site doesn't allow the `Task` issue type on that project. Try a different project, or ask the agent to use `Story` instead.
 - **Prompt tweak didn't take effect.** Give it ~30 seconds (prompts cache briefly), then try again.
 
-Compare against the browser checkpoint **[`forge-guru/lab-02`](https://github.com/atlassian-labs/forge-inspired/tree/forge-guru/lab-02/forge-guru-agent)** if anything looks structurally off. Again — **do not copy the checkpoint's `manifest.yml`** wholesale, just diff individual sections against your own.
+Compare each of the four snippet files against the corresponding section of your local `manifest.yml` / `src/index.js` if anything looks structurally off. Still stuck? See [docs/reference/TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md) or flag your instructor.
 
 ## What you just learned
 
