@@ -1,7 +1,7 @@
 modules:
   rovo:agent:
     - key: forge-guru
-      name: Forge Guru2
+      name: Forge Guru
       description: >-
         Your Forge-specialist teammate in Rovo Chat. Ask Forge Guru about
         the manifest, modules, scopes, UI Kit, storage, the CLI, Rovo —

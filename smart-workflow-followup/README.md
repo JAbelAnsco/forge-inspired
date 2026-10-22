@@ -26,7 +26,7 @@
 
 ### Option A: Let your coding agent do it
 
-Copy the prompt below into Rovo Dev, Cursor, Claude Code, Codex, Copilot CLI, Gemini CLI, or any agent of your choice, and let it drive:
+Copy the prompt below into Cursor, Claude Code, Codex, Copilot CLI, Gemini CLI, or any agent of your choice, and let it drive:
 
 ```text
 Please deploy the Smart Workflow Follow-up app for me.

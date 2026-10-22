@@ -8,7 +8,7 @@ Nothing *yet*. In this lab you install Forge Guru — a conversational Rovo agen
 
 - **Forge Guru is a Rovo agent, not an app with a UI.** Its entire behavior is defined by the `prompt:` block in `manifest.yml` and (later) by any `action` modules you wire up.
 - **Zero scopes.** The stock agent has no OAuth scopes — it never reads or writes product data. That's why Lab 0 install is low-friction.
-- **Your coding assistant can do the whole install.** You'll paste a short prompt into Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever assistant you've set up in your Codespace, and let it run `git clone → npm install → forge register → forge deploy → forge install` for you.
+- **Your coding assistant can do the whole install.** You'll paste a short prompt into Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever assistant you've set up in your Codespace, and let it run `git clone → npm install → forge register → forge deploy → forge install` for you.
 
 ## You should be here
 
@@ -17,7 +17,7 @@ Nothing *yet*. In this lab you install Forge Guru — a conversational Rovo agen
 
 ## Step 1 — install Forge Guru via your coding assistant
 
-Open your coding assistant inside the Codespace — Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive.
+Open your coding assistant inside the Codespace — Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive.
 
 > **Why hand it off?** The Codespace already has Node, the Forge CLI, and the Forge AI Plugin preinstalled. The install flow is deterministic — clone, `npm install`, `forge register`, `forge deploy`, `forge install`. Letting your assistant run it means fewer typos, and it gives you a feel for what "my agent did the plumbing for me" looks like before you start editing agents yourself.
 

@@ -15,7 +15,7 @@ Before any demo in this repo will run, make sure your Forge setup is complete: *
 
 ### Install the Forge AI Plugin (recommended)
 
-If you'll be using an AI coding agent (Rovo Dev, Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix these demos, also install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)**. It bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing.
+If you'll be using an AI coding agent (Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, etc.) to extend or remix these demos, also install the **[Forge AI Plugin](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-ai-plugin/)**. It bundles the Forge developer skills *and* the Forge MCP Server so your agent builds on grounded, current Forge documentation instead of guessing.
 
 Prefer **just the MCP server** without the skills? Follow [Set up the Forge MCP Server](https://developer.atlassian.com/platform/forge/ai-development-toolkit/forge-mcp/) instead.
 

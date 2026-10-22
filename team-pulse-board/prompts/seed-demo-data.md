@@ -1,26 +1,26 @@
-# Rovo Dev prompt — Seed Team Pulse Board demo data
+# Prompt — Seed Team Pulse Board demo data
 
 The Team Pulse Board macro derives everything it shows from **real** Confluence pages and Jira tickets on your site — it doesn't ship with any fake data. On a fresh site there's nothing for it to find, so a demo needs a few real artefacts in place first.
 
-This prompt asks **Rovo Dev** to create them for you in about 60 seconds: a Confluence page with a distinctive title, plus a handful of Jira tickets whose summaries and descriptions mention the same distinctive words. That's the whole demo hook — no explicit links between them, but the macro finds them anyway because the JQL matches on the shared words.
+This prompt asks your coding assistant to create them for you in about 60 seconds: a Confluence page with a distinctive title, plus a handful of Jira tickets whose summaries and descriptions mention the same distinctive words. That's the whole demo hook — no explicit links between them, but the macro finds them anyway because the JQL matches on the shared words.
 
 **How to use it:**
 
-1. Open a **Rovo Dev** session that has the Atlassian MCP tools available.
-2. Tell Rovo which site to use (e.g. `Use the site https://my-tenant.atlassian.net`).
+1. Open a coding-assistant session **that has the Atlassian MCP tools available** — e.g. Claude Code, Cursor, Codex, or Gemini CLI with the Atlassian MCP server configured. (Assistants without Atlassian MCP tools can't create Confluence pages or Jira issues for you, so this prompt won't work in those.)
+2. Tell the assistant which site to use (e.g. `Use the site https://my-tenant.atlassian.net`).
 3. Paste the prompt block below.
-4. Rovo will tell you what it's about to do at each step and wait for your approval before creating anything.
+4. The assistant will tell you what it's about to do at each step and wait for your approval before creating anything.
 
 **You will need**, on the target site:
 
 - Permission to create a Confluence space + page.
 - Permission to create Jira issues in **at least one software-type project** (classic software project with To Do / In Progress / Done — not a service desk or business project).
 - The Team Pulse Board Forge app installed for **both** Confluence and Jira on the site.
-- (Optional) **2–3 other real users assignable on the target site** if you want tickets assigned to different people so avatars show on each card. This is purely cosmetic — the demo works fine with everything unassigned, and on restored/cloned sites cross-site user resolution can be flaky, so Rovo defaults to skipping assignees unless you opt in.
+- (Optional) **2–3 other real users assignable on the target site** if you want tickets assigned to different people so avatars show on each card. This is purely cosmetic — the demo works fine with everything unassigned, and on restored/cloned sites cross-site user resolution can be flaky, so the prompt defaults to skipping assignees unless you opt in.
 
 ---
 
-## Prompt to paste into Rovo Dev
+## Prompt to paste into your coding assistant
 
 ```
 I want to seed demo data for the "Team Pulse Board" Forge macro.
@@ -123,11 +123,11 @@ stop and tell me the error — don't try to work around it silently.
    forge install     # install for BOTH Confluence and Jira
    ```
 
-2. Open the Confluence page that Rovo created.
+2. Open the Confluence page the assistant created.
 3. Click **Edit**, type `/`, insert **Team Pulse Board**, and publish.
 4. You should see:
    - The **Matching on** chip row populated with `Aurora`, `Nimbus`, `Assistant`, `Campaign`, etc.
-   - The three collapsible status sections (**To Do**, **In Progress**, **Done**) populated with the tickets Rovo created, grouped by their status.
+   - The three collapsible status sections (**To Do**, **In Progress**, **Done**) populated with the tickets the assistant created, grouped by their status.
    - Each ticket card showing the assignee avatar, updated date, and a working link to Jira.
 5. Click `+ Add word` and type a term that appears in your project (e.g. `Marketing`) — the search re-runs live and any matching tickets appear.
 
@@ -135,7 +135,7 @@ stop and tell me the error — don't try to work around it silently.
 
 ## Cleanup (optional)
 
-To remove the seed data later, ask Rovo Dev:
+To remove the seed data later, ask your coding assistant:
 
 ```
 Please delete the demo data you created for the Team Pulse Board seed:

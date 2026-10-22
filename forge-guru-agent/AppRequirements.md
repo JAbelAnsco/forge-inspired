@@ -35,7 +35,7 @@ knowledge and the public Forge documentation.
   of trying to execute it.
 - **Code generation on behalf of the user.** Forge Guru explains and
   points at docs; it is not an in-IDE coding agent. For that, users
-  should use their own AI coding agent (Rovo Dev, Cursor, Copilot, etc.)
+  should use their own AI coding agent (Cursor, Copilot, etc.)
   with the `forge-onboarding` skill.
 - **Storage.** The app is stateless — every conversation is independent.
 
