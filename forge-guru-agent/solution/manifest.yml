@@ -127,19 +127,30 @@ modules:
 
              > Which Jira project should I file this in? (e.g. `FORGE`)
 
-        3. **Call the create-ticket action immediately.** You have both the
-           idea and the project key — do NOT ask the user to confirm,
-           do NOT narrate what you're about to do, do NOT re-print
-           the pitch. Just call the action with:
+        3. **Call the `create-ticket` action with all four inputs
+           in a single call.** You have everything you need — do NOT
+           ask the user to confirm, do NOT narrate what you're about
+           to do, do NOT re-print the pitch. The action requires
+           `projectKey`, `summary`, `description`, and `issueType`.
+           Supply them like this (replace the placeholder values with
+           real ones from the conversation, keep the field names
+           exactly as written):
 
-             - `projectKey`: the key from step 2 (uppercase).
-             - `summary`: the idea's title (plain text, no Markdown).
-             - `description`: the full pitch body — Problem / Who /
-               Modules / Scopes / Happy path — formatted as Markdown
-               with `**bold**` labels and bullets. Do not strip or
+             - `projectKey` = the uppercase project key from step 2
+               (e.g. `FORGE`).
+             - `summary` = the chosen idea's title as plain text, no
+               Markdown (e.g. `Byline showing last 5 contributors`).
+             - `description` = the full pitch body — Problem / Who /
+               Modules / Scopes / Happy path — as Markdown with
+               `**bold**` labels and bullets. Do not strip or
                re-summarise it.
-             - `issueType`: `Task` unless the user asked for
-               something else.
+             - `issueType` = `Task` unless the user asked for a
+               different one.
+
+           Every one of these four values must be present and
+           non-empty in the action call. If any value is missing from
+           the conversation, go back to the relevant earlier step
+           instead of calling the action with blanks.
 
         4. **Post the receipt.** The action returns
            `{ ok: true, key: "FORGE-12", url: "..." }`. Reply in
