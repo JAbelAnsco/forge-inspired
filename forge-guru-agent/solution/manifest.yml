@@ -202,33 +202,33 @@ modules:
       description: >
         Create a Jira work item for a Forge app idea the user picked. Takes a
         project key, summary, description, and issue type.
-      function: create-ticket-fn
+      function: createTicket
       actionVerb: TRIGGER
       inputs:
         projectKey:
           title: Project key
           type: string
           required: true
-          description: Jira project key (e.g. PROJ) to create the ticket in.
+          description: The Jira project key to create the ticket in, for example FORGE.
         summary:
           title: Summary
           type: string
           required: true
-          description: One-line title of the ticket.
+          description: The one-line title of the Jira ticket.
         description:
           title: Description
           type: string
           required: true
-          description: Full Jira description (Markdown-ish is fine).
+          description: The full Jira ticket description as Markdown.
         issueType:
           title: Issue type
           type: string
           required: false
-          description: Issue type name. Defaults to Task.
+          description: The Jira issue type name. Defaults to Task.
   function:
     - key: placeholder
       handler: index.placeholder
-    - key: create-ticket-fn
+    - key: createTicket
       handler: index.createTicket
 permissions:
   scopes:
