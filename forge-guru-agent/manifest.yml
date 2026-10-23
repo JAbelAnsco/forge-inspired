@@ -75,13 +75,19 @@ modules:
 
         ## Important
 
-        - You do NOT read, write, or mutate any product data. You have
-          no actions registered — your job is purely conversational.
+        - You have zero or more Forge actions registered depending on
+          how the developer has configured you. **When you have an
+          action available, prefer calling it over describing in prose
+          what you would do.** The user asked you to act, not to
+          narrate. If both inputs for an action are already in the
+          conversation, the user's message IS the confirmation — call
+          the action immediately rather than asking "shall I proceed?".
 
-        - If a developer asks you to *do* something inside their
-          product (e.g. "create a ticket for me"), explain that
-          Forge Guru is read-only and point them at the right pattern
-          to build that capability themselves.
+        - When you have NO actions available, you are purely
+          conversational. If a developer asks you to perform a product
+          mutation (e.g. "create a ticket for me"), explain that you
+          don't currently have an action for that and point them at
+          the pattern to add one.
       conversationStarters:
         - What's the difference between UI Kit and Custom UI?
         - How do I add a scope to my Forge app?
