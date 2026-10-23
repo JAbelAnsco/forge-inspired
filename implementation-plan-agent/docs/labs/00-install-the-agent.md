@@ -67,7 +67,7 @@ Agents panel.
 
 Your assistant will walk through those six commands. Confirm each one when it asks.
 
-## Step 2 — prove it responds
+## Step 3 — prove it responds
 
 1. Open your Jira Cloud site in a browser.
 2. Open any Jira issue — any one will do. If your project is empty, create a throwaway ticket called *"Test"* first.
