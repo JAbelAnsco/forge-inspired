@@ -141,7 +141,12 @@ export const FORGE_APP_IDEAS = [
 
 // ─── Placeholder — Forge still requires at least one function reference
 // outside the rovo:agent entry, so we keep this as a no-op.
-export const placeholder = async () => ({ ok: true });
+// Named-function form (NOT arrow-expression-to-const) to match the handler
+// shape every other working Forge app in this repo uses — see the comment
+// on createTicket below.
+export async function placeholder() {
+  return { ok: true };
+}
 
 // ─── baseUrlFromSelf — same helper pattern as sprint-ready-agent/src/jira.js.
 // We parse the hostname out of Jira's returned `self` URL (which looks like
@@ -168,18 +173,30 @@ const baseUrlFromSelf = (selfUrl) => {
 // binding layer. This is the simplest possible shape — if THIS payload is
 // still empty at runtime, we have proof the problem is Rovo's binding
 // layer, not our prompt or our action schema.
-export const createTicket = async ({ payload }) => {
-  // ─── Instrumentation ────────────────────────────────────────────────
-  // If this log line never appears when you ask Forge Guru to file a
-  // ticket, the agent never called the action — the problem is 100%
-  // prompt-side. If it DOES appear but ideaNumber/projectKey show as
-  // undefined, the problem is 100% Rovo input-binding-side.
+// ─── createTicket — named async function (NOT an arrow expression
+// assigned to a const).
+//
+// Why this matters: every working Forge handler in this repo
+// (implementation-plan-agent/src/actions/*.js, sprint-ready-agent/src/
+// actions/*.js) uses `export async function handlerName({ payload })`,
+// NOT `export const handlerName = async ({ payload }) => ...`. The
+// earlier Forge Guru handler used the arrow form and received
+// `undefined` for payload at runtime — the Forge/Rovo invoke path
+// prefers (or requires) the named-function form for its argument
+// binding to work. This file now uses the proven shape.
+export async function createTicket(args) {
+  // Log the whole first argument object AND its keys. If payload still
+  // comes through as undefined after this change, the arg-shape log
+  // will tell us what the runtime is actually handing us (payload under
+  // a different key, flat inputs, etc.) and we can fix the destructure
+  // in one more edit instead of guessing.
   console.log('[create-ticket] handler invoked', {
-    ideaNumber: payload?.ideaNumber,
-    projectKey: payload?.projectKey,
-    rawPayload: payload,
+    argKeys: args ? Object.keys(args) : null,
+    rawArgs: args,
+    payloadPresent: !!args?.payload,
   });
 
+  const { payload } = args || {};
   const { ideaNumber, projectKey } = payload || {};
 
   // ─── Input validation ─────────────────────────────────────────────────
@@ -271,4 +288,4 @@ export const createTicket = async ({ payload }) => {
     id: created.id,
     url: browseUrl,
   };
-};
+}
