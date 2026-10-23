@@ -123,15 +123,17 @@ Please do the following in order, stopping if any step fails:
    confirm it when prompted.
 
 When you're done, give me:
-- a one-line summary of each file you touched,
-- the output of `grep -E 'export const|function baseUrlFromSelf' src/index.js`
-  (so I can see `placeholder`, `createTicket`, and the
-  `baseUrlFromSelf` helper are all present),
+- a short list of the files you touched, formatted as clickable
+  relative links (e.g. `[manifest.yml](manifest.yml)`), with one
+  short sentence per file describing what changed,
 - confirmation that `forge lint` passed, `forge deploy` succeeded,
   and `forge install --upgrade` finished,
 - a sample chat sequence I can paste into Rovo Chat to test the
   end-to-end flow (pitch ideas, pick one, create a ticket in a
   project I name).
+
+Do not paste full file contents or long grep output — I'll inspect
+the files myself if I need to.
 ```
 
 Your assistant will walk through the sequence. Confirm the diff when it shows it to you, and confirm the scope re-grant when `forge install --upgrade` asks.

@@ -66,10 +66,15 @@ Please do the following in order, stopping if any step fails:
 5. Do NOT run `forge install --upgrade` — no scopes changed.
 
 When you're done, give me:
-- a one-line summary of each file you touched,
+- a short list of the files you touched, formatted as clickable
+  relative links (e.g. `[manifest.yml](manifest.yml)`), with one
+  short sentence per file describing what changed,
 - confirmation that `forge lint` passed and `forge deploy` succeeded,
 - a suggested Jira ticket I can invoke the agent on to compare the
   new plan against my Lab 1 plan.
+
+Do not paste full file contents or long grep output — I'll inspect
+the files myself if I need to.
 ```
 
 Confirm the diff when the assistant shows it to you. If the new bullet is indented at the same level as the four existing section bullets (**Context / Proposed approach / Implementation steps / Risks & open questions**), you're good.
