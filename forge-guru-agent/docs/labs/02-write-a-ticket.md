@@ -23,7 +23,7 @@ Like Lab 1, you don't type any of the YAML or JavaScript by hand — one prompt 
 
 - Lab 1 proof checklist is green. Forge Guru pitches structured ideas.
 - Your `manifest.yml` has the `## Ideation mode` section and the extra conversation starter from Lab 1.
-- You're sitting in `forge-inspired/forge-guru-agent/` in your Codespace terminal.
+- You're sitting in `forge-inspired/forge-guru-agent/starter/` in your Codespace terminal.
 
 > **Note:** your fresh Jira site from Lab 0 almost certainly doesn't have any projects yet. That's fine — Step 1 below walks you through creating one, so the agent has somewhere to file its ticket.
 
@@ -54,7 +54,7 @@ Open your coding assistant inside the Codespace — Cursor, Claude Code, Codex, 
 ```text
 Please apply Lab 2 (Write a ticket) to my local Forge Guru checkout.
 
-I'm in `forge-inspired/forge-guru-agent/` in a Codespace. I've already
+I'm in `forge-inspired/forge-guru-agent/starter/` in a Codespace. I've already
 completed Lab 0 (so `manifest.yml` has my own `app.id` and the stock
 agent is deployed) and Lab 1 (so the agent `prompt:` block has an
 `## Ideation mode` section and the conversation starters list has

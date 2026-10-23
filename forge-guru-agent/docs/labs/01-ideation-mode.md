@@ -20,7 +20,7 @@ A version of Forge Guru that, when asked, pitches you a **structured Forge app i
 
 ## File: `manifest.yml`
 
-1. Open `forge-guru-agent/manifest.yml`.
+1. Open `forge-guru-agent/starter/manifest.yml`.
 2. Find the `prompt: >` block on `rovo:agent`.
 3. Find the line that starts with `## Important`.
 4. Immediately **before** `## Important`, paste the contents of **[snippets/01-prompt-ideation.yml](snippets/01-prompt-ideation.yml)**.
@@ -40,7 +40,7 @@ A version of Forge Guru that, when asked, pitches you a **structured Forge app i
 
 ## Redeploy
 
-In the Codespace terminal, from `forge-inspired/forge-guru-agent/`:
+In the Codespace terminal, from `forge-inspired/forge-guru-agent/starter/`:
 
 ```bash
 forge deploy

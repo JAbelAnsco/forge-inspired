@@ -3,10 +3,9 @@ modules:
     - key: forge-guru
       name: Forge Guru
       description: >-
-        Your Forge-specialist teammate in Rovo Chat. Ask Forge Guru about
-        the manifest, modules, scopes, UI Kit, storage, the CLI, Rovo —
-        anything Forge — and get concrete, grounded answers without
-        leaving the product.
+        Your Forge-specialist teammate in Rovo Chat. Ask Forge Guru about the
+        manifest, modules, scopes, UI Kit, storage, the CLI, Rovo — anything
+        Forge — and get concrete, grounded answers without leaving the product.
       prompt: >
         You are **Forge Guru**, a friendly, pragmatic expert on Atlassian Forge.
         Developers come to you with questions about building Forge apps on
@@ -69,22 +68,20 @@ modules:
 
         ## Ideation mode
 
-        When a developer asks you to brainstorm, pitch, or come up with a
-        Forge app idea (phrases like "give me an app idea", "pitch me",
-        "brainstorm", "what should I build"), switch into **ideation
-        mode**. Respond with one or more structured app pitches using
-        exactly this shape, in Markdown:
+        When a developer asks you to brainstorm, pitch, or come up with a Forge
+        app idea (phrases like "give me an app idea", "pitch me", "brainstorm",
+        "what should I build"), switch into **ideation mode**. Respond with one
+        or more structured app pitches using exactly this shape, in Markdown:
 
-        ```
-        ### <Short, descriptive app title>
+        ``` ### <Short, descriptive app title>
 
-        - **Problem:** <one sentence — the pain point this app removes>
-        - **Who it helps:** <team / role / persona>
-        - **Suggested module(s):** <one or two Forge modules, with their
+        - **Problem:** <one sentence — the pain point this app removes> - **Who
+        it helps:** <team / role / persona> - **Suggested module(s):** <one or
+        two Forge modules, with their
           exact manifest keys — e.g. `confluence:contentByLineItem`,
           `jira:issuePanel`, `rovo:agent`>
-        - **Suggested scopes:** <minimum OAuth scopes the app would need>
-        - **Rough happy path:** <3–5 numbered steps describing the core
+        - **Suggested scopes:** <minimum OAuth scopes the app would need> -
+        **Rough happy path:** <3–5 numbered steps describing the core
           user flow, from "user does X" to "app does Y">
         ```
 
@@ -113,11 +110,10 @@ modules:
 
         ## Ticket-writing mode
 
-        When the user replies to one of your idea pitches with a
-        clear "file / create / make / save this ticket" instruction
-        (e.g. "file the first one in FORGE", "create a ticket for
-        #2 in IDEAS", "save that as a ticket in PROJ"), follow this
-        sequence exactly:
+        When the user replies to one of your idea pitches with a clear "file /
+        create / make / save this ticket" instruction (e.g. "file the first one
+        in FORGE", "create a ticket for #2 in IDEAS", "save that as a ticket in
+        PROJ"), follow this sequence exactly:
 
         1. **Identify the chosen idea.** Pick it from your previous
            pitch message. If their choice is ambiguous (e.g. "that
@@ -193,8 +189,8 @@ modules:
     - key: create-ticket
       name: Create ticket
       description: >
-        Create a Jira work item for a Forge app idea the user picked.
-        Takes a project key, summary, description, and issue type.
+        Create a Jira work item for a Forge app idea the user picked. Takes a
+        project key, summary, description, and issue type.
       function: create-ticket-fn
       actionVerb: TRIGGER
       inputs:
@@ -231,6 +227,4 @@ app:
     name: nodejs24.x
     memoryMB: 256
     architecture: arm64
-  # NOTE: `app.id` is deliberately omitted. When YOU run `forge register`
-  # on your local copy, the CLI writes your own `app.id` into your local
-  # manifest.yml. Do not copy an app.id from somebody else's manifest.
+  id: ari:cloud:ecosystem::app/a2c348b2-b5cb-4e4a-961a-0da1752cf47f

@@ -1,0 +1,19 @@
+{
+  "name": "forge-guru-agent-solution",
+  "version": "0.1.0",
+  "description": "Reference solution for the Forge Guru workshop — baseline + Lab 1 Ideation + Lab 2 Ticket-writing. Standalone-deployable; mirrors forge-guru-agent/starter/package.json versions.",
+  "main": "src/index.js",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "forge": "forge",
+    "deploy": "forge deploy",
+    "upgrade": "forge install --upgrade"
+  },
+  "dependencies": {
+    "@forge/api": "^8.0.4"
+  },
+  "devDependencies": {
+    "@forge/cli": "^14.1.0"
+  }
+}

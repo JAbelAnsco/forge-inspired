@@ -1,6 +1,6 @@
 # Command reference — Forge Guru
 
-Cheatsheet of every command used across the workshop. Run them all in the Codespace terminal from the `forge-inspired/forge-guru-agent/` directory, unless noted.
+Cheatsheet of every command used across the workshop. Run them all in the Codespace terminal from the `forge-inspired/forge-guru-agent/starter/` directory, unless noted. (The sibling `forge-guru-agent/solution/` folder is a separately-deployable reference app — ignore it unless you need to fall back to it.)
 
 ## One-time, in Lab 0
 

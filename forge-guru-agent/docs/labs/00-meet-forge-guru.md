@@ -50,7 +50,7 @@ and stopping if any step fails:
 
 1. Clone the repo: `git clone https://github.com/atlassian-labs/forge-inspired.git`
    (skip if the directory already exists).
-2. `cd` into `forge-inspired/forge-guru-agent`.
+2. `cd` into `forge-inspired/forge-guru-agent/starter` (this is the baseline app you'll be building on across the workshop — don't `cd` into the sibling `solution/` folder, that's a reference you only use if you get stuck).
 3. Run `npm install`.
 4. Run `forge register` so a fresh app id is written into `manifest.yml`
    (skip if the manifest already contains a non-placeholder app id).

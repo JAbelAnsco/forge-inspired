@@ -55,7 +55,8 @@ Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)**. Each snippet
 - **Modules:** [`rovo:agent`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/rovo-agent/) + [`function`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/function/). Lab 2 adds [`action`](https://developer.atlassian.com/platform/forge/manifest-reference/modules/action/).
 - **Scopes:** none in Labs 0 and 1. Lab 2 adds `write:jira-work`.
 - **Grounding:** Rovo's built-in access to the organization's knowledge base and the public Forge documentation.
-- **Entry points:** [`manifest.yml`](./manifest.yml) (the agent definition) and [`src/index.js`](./src/index.js) (the Forge function handlers).
+- **App layout:** this workshop contains **two self-contained Forge apps as subfolders**. [`starter/`](./starter/) is the baseline chat-only Forge Guru that attendees deploy in Lab 0 and build on across Lab 1 and Lab 2. [`solution/`](./solution/) is the fully-built reference app with both labs applied — browse it to compare against your end state, or deploy it as its own agent on your site. See [`solution/README.md`](./solution/README.md) for the when-and-how of using it.
+- **Entry points inside `starter/`:** [`manifest.yml`](./starter/manifest.yml) (the agent definition) and [`src/index.js`](./starter/src/index.js) (the Forge function handlers).
 - **Full command cheatsheet:** [docs/reference/COMMANDS.md](docs/reference/COMMANDS.md).
 - **Common issues:** [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md).
 
