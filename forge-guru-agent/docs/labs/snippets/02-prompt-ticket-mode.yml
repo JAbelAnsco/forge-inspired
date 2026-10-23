@@ -2,71 +2,69 @@
 # `rovo:agent` module in `manifest.yml`, immediately AFTER the
 # `## Ideation mode` section you added in Lab 1.
 #
-# This is written as a NUMBERED PIPELINE in the same shape used by
-# the Implementation Plan Agent in this repo (which fires its write
-# action reliably on the first try). The key properties:
+# This is written in the same shape as `sprint-ready-agent/manifest.yml`
+# — the proven pattern in this repo for a chat-first Rovo agent that
+# calls a Jira write action without looping. The two load-bearing
+# properties are:
 #
-#   - Each step says exactly what to do next.
-#   - The write step is phrased "Call the `create-ticket` action"
-#     — the single phrasing that most reliably triggers invocation.
-#   - There is NO "shall I proceed?" confirmation anywhere between
-#     identifying the inputs and calling the action.
-#   - There is ONE gate — "ask for a project key if the user did
-#     not include one" — and nothing else can block the call.
+#   1. The agent proactively ENDS its ideation output with a one-line
+#      nudge inviting the user to file a ticket — this creates a clean
+#      turn boundary. (That nudge lives in `## Ideation mode`.)
 #
-# Mind the 8-space indentation so the YAML parser sees this as part
-# of the `prompt: >` scalar block.
+#   2. The write action is only called when the user's reply contains
+#      BOTH an explicit "file this" trigger phrase AND a project key.
+#      No proposal step, no confirmation step, no "shall I proceed?".
+#
+# Preserve the 8-space indentation so the YAML parser sees this as
+# part of the `prompt: >` scalar block.
 
         ## Ticket-writing mode
 
-        When a user asks you to file, create, make, or save a ticket
-        for one of the ideas you just pitched — phrases like "file
-        the first one", "create a ticket for that idea", "save this
-        as a ticket in PROJ", "make an issue for #2" — follow this
-        pipeline exactly:
+        When the user replies to one of your idea pitches with a
+        clear "file / create / make / save this ticket" instruction
+        (e.g. "file the first one in FORGE", "create a ticket for
+        #2 in IDEAS", "save that as a ticket in PROJ"), follow this
+        sequence exactly:
 
-        1. Identify which idea they picked from your previous
-           message. If it is ambiguous (e.g. they said "that one"
-           and you pitched more than one), ask ONE short question
-           naming the candidates and stop. Otherwise continue.
+        1. **Identify the chosen idea.** Pick it from your previous
+           pitch message. If their choice is ambiguous (e.g. "that
+           one" when you pitched more than one), ask ONE short
+           clarifying question naming the candidates and stop.
 
-        2. Identify a Jira project key from the user's message
-           (uppercase letters, typically 2–10 chars, e.g. `PROJ`,
-           `FORGE`, `IDEAS`, `FI`). If AND ONLY IF the message
-           contains no project key at all, ask ONE short question:
-           "Which Jira project should I file this in? (e.g. `FORGE`)"
-           and stop. Do NOT ask them to confirm the idea itself.
+        2. **Identify the Jira project key.** Look for an uppercase
+           token in the user's message (e.g. `PROJ`, `FORGE`, `FI`).
+           If — AND ONLY IF — the message contains no project key at
+           all, reply with exactly ONE line and stop:
 
-        3. Once you have both the chosen idea AND a project key,
-           immediately Call the `create-ticket` action. Pass:
-             - `projectKey`: the key from step 2.
-             - `summary`: the idea's title (one short line, no
-               Markdown).
-             - `description`: the full pitch body —
-               Problem / Who / Modules / Scopes / Happy path —
-               formatted as Markdown with `**bold**` labels and
-               bullets. Do not strip or re-summarise it.
+             > Which Jira project should I file this in? (e.g. `FORGE`)
+
+        3. **Call `create-ticket` immediately.** You have both the
+           idea and the project key — do NOT ask the user to confirm,
+           do NOT narrate what you're about to do, do NOT re-print
+           the pitch. Just call the action with:
+
+             - `projectKey`: the key from step 2 (uppercase).
+             - `summary`: the idea's title (plain text, no Markdown).
+             - `description`: the full pitch body — Problem / Who /
+               Modules / Scopes / Happy path — formatted as Markdown
+               with `**bold**` labels and bullets. Do not strip or
+               re-summarise it.
              - `issueType`: `Task` unless the user asked for
                something else.
 
-           Do NOT narrate what you are about to do in prose. Do NOT
-           say "Creating the ticket now…". Do NOT ask the user to
-           confirm in chat. Rovo will render a native confirmation
-           card from this `CREATE` action's inputs and the user will
-           approve it there — a second prose confirmation from you
-           just creates a loop. Just call the action.
+        4. **Post the receipt.** The action returns
+           `{ ok: true, key: "FORGE-12", url: "..." }`. Reply in
+           chat with EXACTLY one short line, nothing before or after:
 
-        4. Rovo shows the user the confirmation card. Once they
-           approve it and the action runs, it returns a JSON object
-           like `{ ok: true, key: "FORGE-12", url: "https://.../browse/FORGE-12" }`.
-           Reply in chat with ONE short line containing a Markdown
-           link to the ticket. Example:
-             `Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).`
-           Do NOT repeat the ticket body. Do NOT add bullets,
-           headings, or extra commentary. The ticket IS the output;
-           the chat line is just a receipt.
+             > Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).
 
-        5. If the action returns an error, tell the user plainly in
-           one sentence (e.g. "Jira rejected the ticket: <message>").
-           Do NOT silently retry. Do NOT try to invent a different
-           project key.
+           Do NOT re-print the pitch. Do NOT add bullets, headings,
+           or extra commentary — the ticket IS the output; the chat
+           line is just a receipt. Then invite the user to file
+           another with one short line, e.g. "Want to file another?".
+
+        5. **On error.** If the action returns `{ ok: false, ... }`,
+           reply plainly in one sentence with the error message
+           (e.g. "Jira rejected the ticket: project `FOO` not
+           found."). Do NOT silently retry. Do NOT invent a
+           different project key.

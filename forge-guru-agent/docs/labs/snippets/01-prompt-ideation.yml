@@ -38,3 +38,12 @@
           rather than inventing one.
         - Keep each pitch under ~12 lines of Markdown. Attendees will
           want to read all three without scrolling for 30 seconds.
+
+        - **After the pitches, end with exactly this one-line nudge
+          and nothing else:**
+
+            > Want me to file any of these as a Jira ticket? Tell me
+            > which one and the project key (e.g. "file #1 in FORGE").
+
+          This gives the user a clear next step. If you don't have a
+          `create-ticket` action registered, skip this line.

@@ -25,7 +25,7 @@
         Create a Jira work item for a Forge app idea the user picked.
         Takes a project key, summary, description, and issue type.
       function: create-ticket-fn
-      actionVerb: CREATE
+      actionVerb: TRIGGER
       inputs:
         projectKey:
           title: Project key
