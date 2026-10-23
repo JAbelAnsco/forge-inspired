@@ -81,10 +81,22 @@ Please do the following in order, stopping if any step fails:
        `modules.function` for the `create-ticket-fn` handler.
      - Edit D: add `write:jira-work` under `permissions.scopes`.
 
-2. Open `src/index.js`. If `import api, { route } from '@forge/api';`
-   is not already at the top, add it. Then append the full
-   `createTicket` export from `docs/labs/snippets/02-create-ticket.js`
-   AFTER the existing `placeholder` export. Keep `placeholder` as is.
+2. Open `src/index.js` and MERGE the snippet
+   `docs/labs/snippets/02-create-ticket.js` into it as follows:
+     a. If `import api, { route } from '@forge/api';` is NOT already
+        at the top of `src/index.js`, add it. Do not duplicate it if
+        it is already there.
+     b. Append ONLY the `export const createTicket = async (...)`
+        block from the snippet to the BOTTOM of `src/index.js`, after
+        the existing `export const placeholder` block. Keep
+        `placeholder` exactly as it is.
+     c. Do NOT copy the snippet file's leading `/* ... */` comment
+        block — that block is instructions ABOUT the snippet, not
+        part of the handler.
+     d. After saving, verify the file contains a line matching
+        `export const createTicket` using:
+            grep -q 'export const createTicket' src/index.js
+        If the grep fails, STOP and tell me — the merge didn't work.
 
 3. Open `manifest.yml` again. Insert the full contents of
    `docs/labs/snippets/02-prompt-ticket-mode.yml` into the `prompt: >`
@@ -95,16 +107,23 @@ Please do the following in order, stopping if any step fails:
 4. Show me the full diff of all edits across both files BEFORE saving.
    Wait for my confirmation before writing.
 
-5. After I confirm, save all files, run `forge lint` to confirm the
-   YAML and the manifest are valid, then run `forge deploy` to the
-   default (development) environment.
+5. After I confirm, save all files, then run `forge lint`. If `forge
+   lint` reports ANY error or warning — especially anything about a
+   missing exported function or a module referencing a function that
+   does not exist — STOP and show me the output. Do NOT proceed to
+   deploy until lint is clean.
 
-6. After `forge deploy` succeeds, run `forge install --upgrade`. The
+6. If `forge lint` is clean, run `forge deploy` to the default
+   (development) environment.
+
+7. After `forge deploy` succeeds, run `forge install --upgrade`. The
    install will ask me to re-accept the new `write:jira-work` scope;
    confirm it when prompted.
 
 When you're done, give me:
 - a one-line summary of each file you touched,
+- the output of `grep 'export const' src/index.js` (so I can see both
+  `placeholder` and `createTicket` are present),
 - confirmation that `forge lint` passed, `forge deploy` succeeded,
   and `forge install --upgrade` finished,
 - a sample chat sequence I can paste into Rovo Chat to test the

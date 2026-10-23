@@ -1,8 +1,19 @@
-// Lab 2 snippet — append this `createTicket` handler to `src/index.js`.
-// Keep the existing `placeholder` export; just add this one alongside it.
-//
-// This handler is wired up by the `create-ticket-fn` function definition
-// you added in `manifest.yml`.
+/*
+ * Lab 2 — src/index.js handler for the create-ticket action.
+ *
+ * MERGE this snippet into `src/index.js` as follows:
+ *   1. Add `import api, { route } from '@forge/api';` at the TOP of
+ *      src/index.js if (and only if) that exact import is not already
+ *      there. Do not duplicate it.
+ *   2. Append the `createTicket` export at the BOTTOM of src/index.js,
+ *      alongside the existing `placeholder` export. Do not delete or
+ *      modify `placeholder`.
+ *   3. Do NOT copy this comment block itself into src/index.js — it's
+ *      documentation for the snippet, not part of the handler.
+ *
+ * This handler is wired up by the `create-ticket-fn` function entry
+ * you added in `manifest.yml`.
+ */
 
 import api, { route } from '@forge/api';
 
@@ -70,10 +81,11 @@ export const createTicket = async ({ payload, context }) => {
 
   // Reconstruct a browsable URL for the agent to render as a link.
   // `context` carries the site's base URL for us — no hardcoding.
-  const siteUrl = context?.siteUrl || context?.cloudId
-    ? // Prefer siteUrl when present; fall back to a known-good shape.
-      (context.siteUrl || `https://api.atlassian.com/ex/jira/${context.cloudId}`)
-    : null;
+  const siteUrl =
+    context?.siteUrl ||
+    (context?.cloudId
+      ? `https://api.atlassian.com/ex/jira/${context.cloudId}`
+      : null);
 
   const browseUrl = siteUrl ? `${siteUrl}/browse/${created.key}` : null;
 
