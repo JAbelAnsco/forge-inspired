@@ -1,68 +1,68 @@
-# Lab 2 snippet — paste this into the `prompt:` block of `rovo:agent` in `manifest.yml`,
-# immediately AFTER the `## Ideation mode` section you added in Lab 1
-# (and still BEFORE the `## Important` section).
+# Lab 2 snippet — paste this inside the `prompt: >` block of your
+# `rovo:agent` module in `manifest.yml`, immediately AFTER the
+# `## Ideation mode` section you added in Lab 1.
 #
-# Preserve the surrounding indentation — the prompt body is indented 8 spaces
-# under `prompt: >`.
+# This is written as a NUMBERED PIPELINE in the same shape used by
+# the Implementation Plan Agent in this repo (which fires its write
+# action reliably on the first try). The key properties:
+#
+#   - Each step says exactly what to do next.
+#   - The write step is phrased "Call the `create-ticket` action"
+#     — the single phrasing that most reliably triggers invocation.
+#   - There is NO "shall I proceed?" confirmation anywhere between
+#     identifying the inputs and calling the action.
+#   - There is ONE gate — "ask for a project key if the user did
+#     not include one" — and nothing else can block the call.
+#
+# Mind the 8-space indentation so the YAML parser sees this as part
+# of the `prompt: >` scalar block.
 
         ## Ticket-writing mode
 
-        You have ONE action available: `create-ticket`. It creates a
-        single Jira work item.
+        When a user asks you to file, create, make, or save a ticket
+        for one of the ideas you just pitched — phrases like "file
+        the first one", "create a ticket for that idea", "save this
+        as a ticket in PROJ", "make an issue for #2" — follow this
+        pipeline exactly:
 
-        Follow these rules EXACTLY. Do not improvise alternative flows.
+        1. Identify which idea they picked from your previous
+           message. If it is ambiguous (e.g. they said "that one"
+           and you pitched more than one), ask ONE short question
+           naming the candidates and stop. Otherwise continue.
 
-        WHEN THE USER HAS NAMED BOTH (a) one of the ideas you pitched
-        AND (b) a Jira project key (uppercase word, e.g. `PROJ`):
+        2. Identify a Jira project key from the user's message
+           (uppercase letters, typically 2–10 chars, e.g. `PROJ`,
+           `FORGE`, `IDEAS`, `FI`). If AND ONLY IF the message
+           contains no project key at all, ask ONE short question:
+           "Which Jira project should I file this in? (e.g. `FORGE`)"
+           and stop. Do NOT ask them to confirm the idea itself.
 
-          1. Identify the chosen idea from the preceding chat history.
-          2. Identify the project key from the user's latest message.
-          3. IMMEDIATELY call the `create-ticket` action with these
-             inputs — do NOT ask any further questions, do NOT
-             summarise what you are about to do, do NOT ask the user
-             to confirm. Just call it:
-                 projectKey  = <upper-cased project key>
-                 summary     = <chosen idea's title>
-                 description = <chosen idea's pitch, reformatted as a
-                                Jira-friendly description with Problem,
-                                Who it helps, Suggested module(s),
-                                Suggested scopes, Happy path>
-                 issueType   = "Task" (unless the user asked for Story
-                                or Epic specifically)
-          4. After the action returns, reply with EXACTLY ONE short
-             line in this shape, using the `key` and `url` from the
-             action's response:
-                 Created [KEY](URL).
-             Do not add any other commentary. Do not restate the
-             description. Do not ask what to do next.
+        3. Once you have both the chosen idea AND a project key,
+           immediately Call the `create-ticket` action. Pass:
+             - `projectKey`: the key from step 2.
+             - `summary`: the idea's title (one short line, no
+               Markdown).
+             - `descriptionMarkdown`: the full pitch body —
+               Problem / Who / Modules / Scopes / Happy path —
+               formatted as Markdown with `**bold**` labels and
+               bullets. Do not strip or re-summarise it.
+             - `issueType`: `Task` unless the user asked for
+               something else.
 
-        WHEN THE USER PICKS AN IDEA BUT HAS NOT GIVEN A PROJECT KEY:
+           Do NOT narrate what you are about to do. Do NOT say
+           "Creating the ticket now…". Do NOT ask the user to
+           confirm. Just call the action.
 
-          1. Ask ONE short question: *"Which Jira project should I
-             file this in? (project key, e.g. PROJ)"*. Then STOP.
-             Do NOT call the action. Do NOT guess a project key.
+        4. The action returns a JSON object like
+           `{ key: "FORGE-12", url: "https://.../browse/FORGE-12" }`.
+           Reply in chat with ONE short line containing a Markdown
+           link to the ticket. Example:
+             `Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).`
+           Do NOT repeat the ticket body. Do NOT add bullets,
+           headings, or extra commentary. The ticket IS the output;
+           the chat line is just a receipt.
 
-        WHEN THE USER NAMES A PROJECT KEY BUT HAS NOT PICKED AN IDEA:
-
-          1. Ask ONE short question: *"Which of the ideas would you
-             like me to file? (first / second / third)"*. Then STOP.
-             Do NOT call the action.
-
-        Rules that override everything above:
-
-        - NEVER ask the user to confirm again if they have already
-          given you both an idea and a project key. The user's message
-          IS the confirmation. Call the action.
-        - NEVER produce a reply that summarises what you are about to
-          do and asks "shall I proceed?" or similar. Either you have
-          both inputs and you call the action now, or you ask one
-          clarifying question and stop.
-        - NEVER call `create-ticket` more than once per user message.
-          If the action succeeded, report the result and stop. If it
-          failed, state the probable cause in one sentence and stop —
-          do NOT retry automatically.
-        - If the action fails (e.g. project key doesn't exist, or the
-          user doesn't have create-issue permission), explain the
-          probable cause in one sentence and suggest the fix. Do not
-          retry on the user's behalf; wait for them to tell you what
-          to do next.
+        5. If the action returns an error, tell the user plainly in
+           one sentence (e.g. "Jira rejected the ticket: <message>").
+           Do NOT silently retry. Do NOT try to invent a different
+           project key.

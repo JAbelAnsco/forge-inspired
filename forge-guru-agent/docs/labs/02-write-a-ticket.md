@@ -150,6 +150,10 @@ Your assistant will walk through the sequence. Confirm the diff when it shows it
 4. The agent's reply contains a line like **"Created [YOUR-123](https://your-site.atlassian.net/browse/YOUR-123)."**
 5. Open that link. The ticket exists, you're the reporter, and the description contains the Problem / Who / Modules / Scopes / Happy path fields.
 
+## Solution
+
+If your coding assistant can't apply the edits cleanly (malformed YAML, wrong indentation, or the merge went wrong), you can overlay the final-state files directly from **[`solution/`](../../solution/)**. See [`solution/README.md`](../../solution/README.md) for the overlay instructions — in particular, do NOT replace your `manifest.yml` wholesale because it holds your personal `app.id` from Lab 0.
+
 ## If you get stuck
 
 - **Chat says "I don't have permission".** `forge install --upgrade` was skipped or didn't take. Ask your assistant to re-run it and reconfirm the scope.
