@@ -1,11 +1,13 @@
 # Lab 2 snippet — three edits to `manifest.yml`.
 #
 # ─── EDIT A ─────────────────────────────────────────────────────────────────
-# Under `rovo:agent` → the single agent entry, add an `action:` list that
+# Under `rovo:agent` → the single agent entry, add an `actions:` list that
 # references the new `create-ticket` action by key. Place it right after the
-# `prompt:` block and before `conversationStarters:`.
+# `prompt:` block and before `conversationStarters:`. (Note: plural `actions:`,
+# matching how both implementation-plan-agent and sprint-ready-agent declare
+# their agents' action lists — `action:` singular will fail `forge lint`.)
 
-      action:
+      actions:
         - create-ticket
 
 # ─── EDIT B ─────────────────────────────────────────────────────────────────

@@ -176,7 +176,7 @@ modules:
           (e.g. "create a ticket for me" with no registered action),
           say so plainly and point them at the Forge pattern to add
           one. Don't pretend to do it.
-      action:
+      actions:
         - create-ticket
       conversationStarters:
         - What's the difference between UI Kit and Custom UI?
@@ -227,4 +227,4 @@ app:
     name: nodejs24.x
     memoryMB: 256
     architecture: arm64
-  id: ari:cloud:ecosystem::app/a2c348b2-b5cb-4e4a-961a-0da1752cf47f
+  id: ari:cloud:ecosystem::app/ef1f448c-7aa5-465a-b95a-e3ac156c2c4a
