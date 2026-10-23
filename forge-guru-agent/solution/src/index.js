@@ -47,14 +47,36 @@ function baseUrlFromSelf(selfUrl) {
 }
 
 export const createTicket = async ({ payload }) => {
+  // ─── Instrumentation ────────────────────────────────────────────────
+  // The single most important log in this whole app: if you ask Forge
+  // Guru to file a ticket and this line never shows up in `forge logs`,
+  // the agent never called the action — the problem is prompt-side, not
+  // handler-side. If this line DOES show up, keep reading the logs.
+  console.log('[create-ticket] handler invoked', {
+    projectKey: payload?.projectKey,
+    summary: payload?.summary,
+    descriptionLength: payload?.description?.length ?? 0,
+    issueType: payload?.issueType,
+  });
+
   const { projectKey, summary, description, issueType } = payload || {};
 
   if (!projectKey || !summary || !description) {
+    console.warn('[create-ticket] missing required inputs — returning error', {
+      hasProjectKey: !!projectKey,
+      hasSummary: !!summary,
+      hasDescription: !!description,
+    });
     return {
       ok: false,
       error: 'projectKey, summary, and description are all required.',
     };
   }
+
+  console.log('[create-ticket] POST /rest/api/3/issue', {
+    projectKey: projectKey.toUpperCase(),
+    issueType: issueType || 'Task',
+  });
 
   const body = {
     fields: {
@@ -98,6 +120,12 @@ export const createTicket = async ({ payload }) => {
   const created = await response.json();
   const baseUrl = baseUrlFromSelf(created.self);
   const browseUrl = baseUrl ? `${baseUrl}/browse/${created.key}` : null;
+
+  console.log('[create-ticket] Jira issue created', {
+    key: created.key,
+    id: created.id,
+    browseUrl,
+  });
 
   return {
     ok: true,

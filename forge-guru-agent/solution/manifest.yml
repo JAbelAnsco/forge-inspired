@@ -1,7 +1,7 @@
 modules:
   rovo:agent:
     - key: forge-guru
-      name: Forge Guru
+      name: Forge Guru Solution
       description: >-
         Your Forge-specialist teammate in Rovo Chat. Ask Forge Guru about the
         manifest, modules, scopes, UI Kit, storage, the CLI, Rovo — anything
@@ -127,7 +127,7 @@ modules:
 
              > Which Jira project should I file this in? (e.g. `FORGE`)
 
-        3. **Call `create-ticket` immediately.** You have both the
+        3. **Call the create-ticket action immediately.** You have both the
            idea and the project key — do NOT ask the user to confirm,
            do NOT narrate what you're about to do, do NOT re-print
            the pitch. Just call the action with:
