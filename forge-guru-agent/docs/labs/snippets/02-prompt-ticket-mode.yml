@@ -42,19 +42,23 @@
              - `projectKey`: the key from step 2.
              - `summary`: the idea's title (one short line, no
                Markdown).
-             - `descriptionMarkdown`: the full pitch body —
+             - `description`: the full pitch body —
                Problem / Who / Modules / Scopes / Happy path —
                formatted as Markdown with `**bold**` labels and
                bullets. Do not strip or re-summarise it.
              - `issueType`: `Task` unless the user asked for
                something else.
 
-           Do NOT narrate what you are about to do. Do NOT say
-           "Creating the ticket now…". Do NOT ask the user to
-           confirm. Just call the action.
+           Do NOT narrate what you are about to do in prose. Do NOT
+           say "Creating the ticket now…". Do NOT ask the user to
+           confirm in chat. Rovo will render a native confirmation
+           card from this `CREATE` action's inputs and the user will
+           approve it there — a second prose confirmation from you
+           just creates a loop. Just call the action.
 
-        4. The action returns a JSON object like
-           `{ key: "FORGE-12", url: "https://.../browse/FORGE-12" }`.
+        4. Rovo shows the user the confirmation card. Once they
+           approve it and the action runs, it returns a JSON object
+           like `{ ok: true, key: "FORGE-12", url: "https://.../browse/FORGE-12" }`.
            Reply in chat with ONE short line containing a Markdown
            link to the ticket. Example:
              `Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).`

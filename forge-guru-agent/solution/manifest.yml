@@ -127,19 +127,23 @@ modules:
              - `projectKey`: the key from step 2.
              - `summary`: the idea's title (one short line, no
                Markdown).
-             - `descriptionMarkdown`: the full pitch body —
+             - `description`: the full pitch body —
                Problem / Who / Modules / Scopes / Happy path —
                formatted as Markdown with `**bold**` labels and
                bullets. Do not strip or re-summarise it.
              - `issueType`: `Task` unless the user asked for
                something else.
 
-           Do NOT narrate what you are about to do. Do NOT say
-           "Creating the ticket now…". Do NOT ask the user to
-           confirm. Just call the action.
+           Do NOT narrate what you are about to do in prose. Do NOT
+           say "Creating the ticket now…". Do NOT ask the user to
+           confirm in chat. Rovo will render a native confirmation
+           card from this `CREATE` action's inputs and the user will
+           approve it there — a second prose confirmation from you
+           just creates a loop. Just call the action.
 
-        4. The action returns a JSON object like
-           `{ key: "FORGE-12", url: "https://.../browse/FORGE-12" }`.
+        4. Rovo shows the user the confirmation card. Once they
+           approve it and the action runs, it returns a JSON object
+           like `{ ok: true, key: "FORGE-12", url: "https://.../browse/FORGE-12" }`.
            Reply in chat with ONE short line containing a Markdown
            link to the ticket. Example:
              `Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).`
@@ -163,11 +167,12 @@ modules:
 
         - You have zero or more Forge actions registered depending on
           how the developer has configured you. **When you have an
-          action available, prefer calling it over describing in prose
-          what you would do.** The user asked you to act, not to
-          narrate. If both inputs for an action are already in the
-          conversation, the user's message IS the confirmation — call
-          the action immediately rather than asking "shall I proceed?".
+          action available and you have the inputs it needs, call it.**
+          Don't narrate what you would do in prose — the user asked
+          you to act. The product renders its own confirmation UI
+          where appropriate (e.g. a `CREATE` action shows a native
+          card the user approves before anything is written), so you
+          don't need to add a second prose "shall I proceed?" on top.
 
         - When you have NO actions available, you are purely
           conversational. If a developer asks you to perform a product
@@ -190,7 +195,7 @@ modules:
         Create a Jira work item for a Forge app idea the user picked.
         Takes a project key, summary, description, and issue type.
       function: create-ticket-fn
-      actionVerb: TRIGGER
+      actionVerb: CREATE
       inputs:
         projectKey:
           title: Project key

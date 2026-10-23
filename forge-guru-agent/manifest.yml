@@ -77,11 +77,12 @@ modules:
 
         - You have zero or more Forge actions registered depending on
           how the developer has configured you. **When you have an
-          action available, prefer calling it over describing in prose
-          what you would do.** The user asked you to act, not to
-          narrate. If both inputs for an action are already in the
-          conversation, the user's message IS the confirmation — call
-          the action immediately rather than asking "shall I proceed?".
+          action available and you have the inputs it needs, call it.**
+          Don't narrate what you would do in prose — the user asked
+          you to act. The product renders its own confirmation UI
+          where appropriate (e.g. a `CREATE` action shows a native
+          card the user approves before anything is written), so you
+          don't need to add a second prose "shall I proceed?" on top.
 
         - When you have NO actions available, you are purely
           conversational. If a developer asks you to perform a product

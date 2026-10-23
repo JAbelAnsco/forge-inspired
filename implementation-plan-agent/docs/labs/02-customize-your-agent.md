@@ -92,6 +92,10 @@ Confirm the diff when the assistant shows it to you. If the new bullet is indent
 - [ ] The four original sections (**Context / Proposed approach / Implementation steps / Risks & open questions**) are still there — your edit *extended* the plan, it didn't *replace* parts of it.
 - [ ] Side-by-side with your Lab 1 plan on the same (or a similar) ticket, the Lab 2 plan is visibly richer in the dimension you added.
 
+## Solution
+
+If your coding assistant can't apply the edit cleanly (malformed YAML or wrong indentation), you can overlay the final-state manifest directly from **[`solution/`](../../solution/)**. The default solution in that folder uses the **testing checklist** customization — if you picked security review or Forge-docs grounding instead, use the matching snippet file in `snippets/`. See [`solution/README.md`](../../solution/README.md) for overlay instructions — in particular, do NOT replace your `manifest.yml` wholesale because it holds your personal `app.id` from Lab 0.
+
 ## If you get stuck
 
 - **The new section isn't appearing.** Did `forge deploy` actually finish successfully? Did you give the prompt cache ~30 seconds? Did you paste the snippet INSIDE step 4 (not after the whole sequence)?
