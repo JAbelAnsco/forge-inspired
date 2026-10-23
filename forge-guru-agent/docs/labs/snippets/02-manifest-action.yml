@@ -1,33 +1,34 @@
-# Lab 2 snippet — three edits to `manifest.yml`.
+# Lab 2 snippet. Four manifest edits that wire up the `create-ticket` action.
 #
-# ─── EDIT A ─────────────────────────────────────────────────────────────────
-# Under `rovo:agent` → the single agent entry, add an `actions:` list that
-# references the new `create-ticket` action by key. Place it right after the
-# `prompt:` block and before `conversationStarters:`. (Note: plural `actions:`,
-# matching how both implementation-plan-agent and sprint-ready-agent declare
-# their agents' action lists — `action:` singular will fail `forge lint`.)
+# Apply each edit in-place in `manifest.yml`, preserving all surrounding
+# indentation. Lint with `forge lint` after saving.
+
+# ─── EDIT A ───────────────────────────────────────────────────────────────
+# Under the single `rovo:agent` entry, between the `prompt:` block and
+# `conversationStarters:`, add this block:
 
       actions:
         - create-ticket
 
-# ─── EDIT B ─────────────────────────────────────────────────────────────────
-# Add a new `conversationStarters:` line at the bottom of the existing list.
+# ─── EDIT B ───────────────────────────────────────────────────────────────
+# Add this new conversation starter to the bottom of the
+# `conversationStarters:` list:
 
-        - Turn my app idea into a Jira ticket
+        - File idea #1 as a Jira ticket in <YOUR_PROJECT_KEY>
 
-# ─── EDIT C ─────────────────────────────────────────────────────────────────
-# Add a top-level `modules.action` list (sibling of `modules.function` and
-# `modules.rovo:agent`). Also add the handler function definition under
-# `modules.function`.
+# ─── EDIT C ───────────────────────────────────────────────────────────────
+# At the top level of `modules:`, add this new `action:` block (sibling to
+# `rovo:agent:` and `function:`):
 
   action:
     - key: create-ticket
       name: Create ticket
-      description: >
-        Create a Jira work item for a Forge app idea the user picked.
-        Takes a project key, summary, description, and issue type.
       function: createTicket
       actionVerb: TRIGGER
+      description: >
+        File a Forge-app idea as a Jira ticket. The agent passes the full
+        ticket contents (summary, description) assembled from the chat
+        conversation.
       inputs:
         projectKey:
           title: Project key
@@ -38,32 +39,27 @@
           title: Summary
           type: string
           required: true
-          description: The one-line title of the Jira ticket.
+          description: One-line ticket title, plain text, no Markdown.
         description:
           title: Description
           type: string
           required: true
-          description: The full Jira ticket description as Markdown.
+          description: Full ticket body as Markdown. Supports bold, inline code, bullet lists, and numbered lists.
         issueType:
           title: Issue type
           type: string
           required: false
-          description: The Jira issue type name. Defaults to Task.
+          description: Jira issue type name. Defaults to Task.
 
-  function:
-    # Existing placeholder stays — Forge still requires it even now that
-    # we have a real action. Add the handler below alongside it. Use a
-    # camelCase function key (not create-ticket-fn) so the module key
-    # matches the handler name exactly — same convention used in
-    # implementation-plan-agent and sprint-ready-agent, and the shape
-    # Rovo's input-binding layer expects.
-    - key: placeholder
-      handler: index.placeholder
+# And add this new entry to the existing `function:` list (do NOT remove
+# the existing `placeholder` entry):
+
     - key: createTicket
       handler: index.createTicket
 
-# ─── EDIT D ─────────────────────────────────────────────────────────────────
-# Add the Jira write scope under `permissions.scopes`.
+# ─── EDIT D ───────────────────────────────────────────────────────────────
+# Add `write:jira-work` under `permissions.scopes` (replacing the empty
+# list if the starter has `scopes: []`):
 
 permissions:
   scopes:

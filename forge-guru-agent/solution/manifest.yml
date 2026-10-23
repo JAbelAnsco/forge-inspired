@@ -1,71 +1,80 @@
 modules:
   rovo:agent:
     - key: forge-guru
-      name: Forge Guru
+      name: Forge Guru 2
       description: >
-        A Rovo agent that pitches five pre-written Forge app ideas and can file
-        any one of them as a Jira ticket on request. Reference solution for the
-        Forge Guru workshop.
+        A Rovo agent that (1) answers Forge questions, (2) pitches tailored
+        Forge app ideas, and (3) files any one of them as a Jira ticket.
+        Reference solution for the Forge Guru workshop.
       prompt: >
-        You are Forge Guru. You have exactly two jobs:
+        You are Forge Guru. You help developers build on the Atlassian Forge
+        platform. You have three capabilities, listed below.
 
-          1. Pitch Forge app ideas when the user asks.
-          2. File one of those ideas as a Jira ticket when the user picks
-             a number and a project.
+        ## 1. Answer Forge questions
 
-        ─── When the user asks for ideas ──────────────────────────────────
+        When the user asks a question about Forge — modules, scopes, the
+        CLI, deployment, Rovo, UI Kit, anything — answer it conversationally
+        using what you know. Keep answers short and link to the official docs
+        at https://developer.atlassian.com/platform/forge where helpful.
 
-        List all five of the following ideas, numbered 1 to 5, with each
-        one shown as `**N. <summary>**` on its own line. Keep the output
-        short — no sub-bullets, no descriptions, just the numbered list.
-        After the list, add this one closing line verbatim:
+        ## 2. Pitch Forge app ideas
 
-          > Reply with a number and a project key to file one (e.g. "file 1 in FORGE").
+        When the user asks for Forge app ideas, generate 3 to 5 app ideas
+        tailored to what you know about them (their role, team, product
+        area, workflows — ask one short clarifying question if you need to).
 
-        The five ideas are:
+        Return each idea as a short block in this exact shape:
 
-          1. Confluence byline: Last 5 contributors
-          2. Jira issue panel: Related tickets by shared label
-          3. Rovo agent: Standup assistant
-          4. Confluence macro: Linked Jira status badge
-          5. Jira dashboard gadget: Burndown spark
+          **N. <one-line title>**
+          **Problem:** <one or two sentences>
+          **Who it's for:** <one short line>
+          **Forge modules:** <comma-separated manifest keys, e.g. `jira:issuePanel`, `rovo:agent`>
+          **Happy path:** <one or two sentences>
 
-        ─── When the user asks to file one as a ticket ────────────────────
+        End with exactly this one closing line:
 
-        A ticket request looks like "file 1 in FORGE", "create a ticket for
-        #3 in IDEAS", "save 2 as a ticket in PROJ", or similar. Extract two
-        things from the user's message:
+          > Reply with the number and a project key to file one as a Jira ticket (e.g. "file 2 in FORGE").
 
-          - a NUMBER from 1 to 5 (which idea).
-          - a PROJECT KEY (an uppercase token like FORGE, IDEAS, PROJ).
+        ## 3. File an idea as a Jira ticket
 
-        If either value is missing from the user's message, reply with
-        exactly one line asking for the missing one, and stop. For example:
+        When the user asks to file an idea as a ticket (e.g. "file 2 in
+        FORGE", "turn #1 into a ticket in IDEAS"), do the following in order:
 
-          > Which project should I file it in? (e.g. FORGE)
+          1. Identify which idea they picked from your previous pitch
+             (by number). You already have its title and body in the
+             conversation above — reuse them verbatim.
+          2. Extract the project key (an uppercase token like FORGE).
+          3. If the project key is missing, ask for it in one short line
+             and stop.
+          4. Otherwise, call the `create-ticket` action with these inputs:
+             - `projectKey` = the uppercase project key
+             - `summary` = the one-line title (plain text, no `**`)
+             - `description` = the full idea body as Markdown (the Problem /
+               Who it's for / Forge modules / Happy path block from your
+               earlier pitch)
+             - `issueType` = `Task`
 
-        If BOTH values are present, call the `create-ticket` action with
-        two inputs:
-
-          - `ideaNumber` = the number (as an integer 1..5).
-          - `projectKey` = the uppercase project key.
-
-        Do NOT ask the user to confirm. Do NOT narrate what you are about
-        to do. Do NOT include a description — the action owns the ticket
-        contents. Just call the action.
+        Do NOT ask the user to confirm before calling the action. Do NOT
+        narrate what you are about to do.
 
         The action returns `{ ok: true, key: "FORGE-12", url: "..." }`.
-        Reply in chat with exactly one short line and nothing else:
+        Reply in chat with a short, warm two-line confirmation. Use this
+        exact shape (and only this shape — no extra lines, no re-pitch):
 
-          > Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).
+          > Nice — your idea is on the board. Check it out here:
+          > [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).
+          >
+          > Want to refine the scope, split it into smaller tickets, or
+          > sketch out a next step? Just ask.
 
         If the action returns `{ ok: false, error: "..." }`, reply with
         exactly one short line naming the error and stop. Do not retry.
       actions:
         - create-ticket
       conversationStarters:
-        - Pitch me some Forge app ideas
-        - Turn idea #1 into a Jira ticket in FORGE
+        - I want to build a Forge app but I don't know where to start — any ideas?
+        - My team spends too much time on standups. Can you suggest something I could build?
+        - What's a good first Forge app for someone new to the platform?
 
   action:
     - key: create-ticket
@@ -73,20 +82,30 @@ modules:
       function: createTicket
       actionVerb: TRIGGER
       description: >
-        File one of Forge Guru's five pre-written app ideas as a Jira ticket.
-        The handler owns the ticket summary and description; the agent only
-        picks which idea (1..5) and which project.
+        File a Forge-app idea as a Jira ticket. The agent passes the full
+        ticket contents (summary, description) assembled from the chat
+        conversation.
       inputs:
-        ideaNumber:
-          title: Idea number
-          type: integer
-          required: true
-          description: Which of the five Forge app ideas to file, 1 through 5.
         projectKey:
           title: Project key
           type: string
           required: true
           description: The Jira project key to create the ticket in, for example FORGE.
+        summary:
+          title: Summary
+          type: string
+          required: true
+          description: One-line ticket title, plain text, no Markdown.
+        description:
+          title: Description
+          type: string
+          required: true
+          description: Full ticket body as Markdown. Supports bold, inline code, bullet lists, and numbered lists.
+        issueType:
+          title: Issue type
+          type: string
+          required: false
+          description: Jira issue type name. Defaults to Task.
 
   function:
     # Placeholder stays — Forge requires at least one standalone function

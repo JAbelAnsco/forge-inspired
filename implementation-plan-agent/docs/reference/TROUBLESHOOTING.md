@@ -20,7 +20,7 @@ The Jira Agents panel can auto-draft a second comment from the agent's chat repl
 
 - **Indentation.** Every nested key is 2 spaces. Tabs will break YAML.
 - **A `function` key referenced from an `action` doesn't exist** under `modules.function`.
-- Compare against the `main` branch's `manifest.yml` — the structure of `actions:` / `action:` / `function:` is easy to break.
+- Compare against the `main` branch's `starter/manifest.yml` — the structure of `actions:` / `action:` / `function:` is easy to break.
 
 ## The plan comment isn't appearing on the issue
 

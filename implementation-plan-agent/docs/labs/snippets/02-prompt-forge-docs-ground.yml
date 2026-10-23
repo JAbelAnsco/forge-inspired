@@ -1,7 +1,7 @@
 # Lab 2 customization — Forge documentation grounding
 #
 # Paste the block below INTO step 4 of the "WHEN A USER ASKS YOU TO PLAN AN
-# ISSUE" sequence in the `prompt:` block of `rovo:agent` in `manifest.yml`,
+# ISSUE" sequence in the `prompt:` block of `rovo:agent` in `starter/manifest.yml`,
 # as a new section item.
 #
 # Add it RIGHT AFTER the "Risks & open questions" bullet so every plan now

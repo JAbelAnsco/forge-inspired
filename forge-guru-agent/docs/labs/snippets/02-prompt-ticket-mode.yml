@@ -1,81 +1,43 @@
-# Lab 2 snippet — paste this inside the `prompt: >` block of your
-# `rovo:agent` module in `manifest.yml`, immediately AFTER the
-# `## Ideation mode` section you added in Lab 1.
+# Lab 2 snippet. Paste this into the `prompt:` block of `rovo:agent` in
+# `manifest.yml`, immediately AFTER the `## Ideation mode` section (added in
+# Lab 1) and BEFORE the `## Important` section.
 #
-# This is written in the same shape as `sprint-ready-agent/manifest.yml`
-# — the proven pattern in this repo for a chat-first Rovo agent that
-# calls a Jira write action without looping. The two load-bearing
-# properties are:
-#
-#   1. The agent proactively ENDS its ideation output with a one-line
-#      nudge inviting the user to file a ticket — this creates a clean
-#      turn boundary. (That nudge lives in `## Ideation mode`.)
-#
-#   2. The write action is only called when the user's reply contains
-#      BOTH an explicit "file this" trigger phrase AND a project key.
-#      No proposal step, no confirmation step, no "shall I proceed?".
-#
-# Preserve the 8-space indentation so the YAML parser sees this as
-# part of the `prompt: >` scalar block.
+# Preserve the leading indentation of the surrounding prompt lines. In the
+# starter manifest the prompt body is indented 8 spaces under `prompt: >`.
+# If the existing lines show 8 leading spaces, these new lines must too.
 
-        ## Ticket-writing mode
+        ## File an idea as a Jira ticket
 
-        When the user replies to one of your idea pitches with a
-        clear "file / create / make / save this ticket" instruction
-        (e.g. "file the first one in FORGE", "create a ticket for
-        #2 in IDEAS", "save that as a ticket in PROJ"), follow this
-        sequence exactly:
+        When the user asks to file an idea as a ticket (e.g. "file 2 in
+        FORGE", "turn #1 into a ticket in IDEAS"), do the following in
+        order:
 
-        1. **Identify the chosen idea.** Pick it from your previous
-           pitch message. If their choice is ambiguous (e.g. "that
-           one" when you pitched more than one), ask ONE short
-           clarifying question naming the candidates and stop.
+          1. Identify which idea they picked from your previous pitch
+             (by number). You already have its title and body in the
+             conversation above; reuse them verbatim.
+          2. Extract the project key (an uppercase token like FORGE).
+          3. If the project key is missing, ask for it in one short line
+             and stop.
+          4. Otherwise, call the `create-ticket` action with these inputs:
+             - `projectKey` = the uppercase project key
+             - `summary` = the one-line title (plain text, no `**`)
+             - `description` = the full idea body as Markdown (the
+               Problem / Who it's for / Forge modules / Happy path
+               block from your earlier pitch)
+             - `issueType` = `Task`
 
-        2. **Identify the Jira project key.** Look for an uppercase
-           token in the user's message (e.g. `PROJ`, `FORGE`, `FI`).
-           If — AND ONLY IF — the message contains no project key at
-           all, reply with exactly ONE line and stop:
+        Do NOT ask the user to confirm before calling the action. Do NOT
+        narrate what you are about to do.
 
-             > Which Jira project should I file this in? (e.g. `FORGE`)
+        The action returns `{ ok: true, key: "FORGE-12", url: "..." }`.
+        Reply in chat with a short, warm two-line confirmation. Use this
+        exact shape (and only this shape, no extra lines, no re-pitch):
 
-        3. **Call the `create-ticket` action with all four inputs
-           in a single call.** You have everything you need — do NOT
-           ask the user to confirm, do NOT narrate what you're about
-           to do, do NOT re-print the pitch. The action requires
-           `projectKey`, `summary`, `description`, and `issueType`.
-           Supply them like this (replace the placeholder values with
-           real ones from the conversation, keep the field names
-           exactly as written):
+          > Nice, your idea is on the board. Check it out here:
+          > [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).
+          >
+          > Want to refine the scope, split it into smaller tickets, or
+          > sketch out a next step? Just ask.
 
-             - `projectKey` = the uppercase project key from step 2
-               (e.g. `FORGE`).
-             - `summary` = the chosen idea's title as plain text, no
-               Markdown (e.g. `Byline showing last 5 contributors`).
-             - `description` = the full pitch body — Problem / Who /
-               Modules / Scopes / Happy path — as Markdown with
-               `**bold**` labels and bullets. Do not strip or
-               re-summarise it.
-             - `issueType` = `Task` unless the user asked for a
-               different one.
-
-           Every one of these four values must be present and
-           non-empty in the action call. If any value is missing from
-           the conversation, go back to the relevant earlier step
-           instead of calling the action with blanks.
-
-        4. **Post the receipt.** The action returns
-           `{ ok: true, key: "FORGE-12", url: "..." }`. Reply in
-           chat with EXACTLY one short line, nothing before or after:
-
-             > Created [FORGE-12](https://your-site.atlassian.net/browse/FORGE-12).
-
-           Do NOT re-print the pitch. Do NOT add bullets, headings,
-           or extra commentary — the ticket IS the output; the chat
-           line is just a receipt. Then invite the user to file
-           another with one short line, e.g. "Want to file another?".
-
-        5. **On error.** If the action returns `{ ok: false, ... }`,
-           reply plainly in one sentence with the error message
-           (e.g. "Jira rejected the ticket: project `FOO` not
-           found."). Do NOT silently retry. Do NOT invent a
-           different project key.
+        If the action returns `{ ok: false, error: "..." }`, reply with
+        exactly one short line naming the error and stop. Do not retry.

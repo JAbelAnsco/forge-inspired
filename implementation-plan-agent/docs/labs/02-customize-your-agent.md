@@ -1,122 +1,117 @@
-# Lab 2 · Customize your planning agent
+# Lab 2 · Customize your agent
 
 ## What you're building
 
-An opinionated version of the Implementation Plan Agent that *always* bakes a specific lens into every plan it writes — a **Testing checklist**, a **Security considerations** section, or a **Relevant Forge documentation** section. (Or your own — once you've seen how the pattern works, you can invent your own.)
+This is the lab where you discover that **the prompt is the product**. You teach the Implementation Plan Agent to always weave a new lens into every plan it writes, a Testing checklist, a Security review, or links to the right Forge docs. One YAML edit, one `forge deploy`, and every future plan the agent writes changes shape.
 
-The point: see with your own eyes that **the prompt is the product**. One YAML edit → every future plan the agent writes changes shape. No new code, no new scopes, no reinstall — just `forge deploy`.
+The best part: you built this once in Lab 0. Now, with a single file edit, you've got a sharper, more opinionated version. That's the loop every real agent lives in.
+
+You will not run a coding assistant for this lab. You open the file, you paste one block, you deploy. Feeling the YAML in your fingers is the whole point.
 
 ## Ideas you need
 
 - **Prompt edits are deploys, not reinstalls.** You're not changing scopes, so `forge install --upgrade` is not needed. One `forge deploy` is enough.
-- **Where you insert matters.** The stock prompt structures a plan in step 4 of the "WHEN A USER ASKS YOU TO PLAN AN ISSUE" sequence. New plan sections go *inside* that step 4, as a new bullet, so the agent treats them as "a required section of every plan."
-- **Your AI coding assistant should do the file edit.** The point of this lab is iterating on the agent's behavior, not practising YAML edits by hand. Let your assistant paste the snippet in the right place.
+- **The agent's prompt is a numbered pipeline.** Open `manifest.yml` and find the `prompt: >` block on `rovo:agent`. Inside it the agent follows a 6-step pipeline titled `WHEN A USER ASKS YOU TO PLAN AN ISSUE:`. The steps are: *(1)* ask for an issue key, *(2)* call `inspect-issue`, *(3)* draft a plan, *(4)* **structure the plan into these sections**, *(5)* call `post-implementation-plan`, *(6)* reply to the user. **Step 4 is where this lab lives.** It currently defines four plan sections (Context, Proposed approach, Implementation steps, Risks & open questions). You're going to add a fifth.
+- **YAML cares about spaces.** The prompt body is indented 6 spaces under `prompt: >`. Section bullets inside step 4 start with 9 spaces (`-` then a space). Bullet continuation lines wrap to 13 spaces. If your new bullet is off by even one space, `forge lint` will catch it. Match the surrounding indentation exactly.
 
 ## You should be here
 
 - Lab 1 proof checklist is green.
-- You have at least one Jira ticket that already has a stock plan comment on it — you'll compare Lab 2's output against that one.
+- You have at least one Jira ticket that already has a stock plan comment on it. You'll compare Lab 2's output against that one.
 
 ## Step 1 — pick a customization
 
-Pick **one** of the three starter snippets. (If you prefer, write your own in the same shape and skip the snippet.)
+Three snippet files ship in `docs/labs/snippets/`. Pick one that matches what you want your plans to feel like:
 
-| Snippet | Teaches the agent to always… |
-|---|---|
-| **[snippets/02-prompt-testing-checklist.yml](snippets/02-prompt-testing-checklist.yml)** | …end every plan with a 4+ item testing checklist, including unit, integration, and negative-path tests. |
-| **[snippets/02-prompt-security-review.yml](snippets/02-prompt-security-review.yml)** | …end every plan with 3–5 explicit security questions — scopes, `asUser` vs `asApp`, input validation, egress, data storage. |
-| **[snippets/02-prompt-forge-docs-ground.yml](snippets/02-prompt-forge-docs-ground.yml)** | …end every plan with a short list of relevant `developer.atlassian.com` doc links, each tied to a specific decision in the plan. |
+| Snippet | What it adds | When to pick it |
+| --- | --- | --- |
+| **[02-prompt-testing-checklist.yml](snippets/02-prompt-testing-checklist.yml)** | A **Testing checklist** section with happy-path, negative-path, and edge-case cases. | You keep forgetting the negative-path test. |
+| **[02-prompt-security-review.yml](snippets/02-prompt-security-review.yml)** | A **Security review** section covering scopes, data exposure, and ownership. | You're building for a security-sensitive environment. |
+| **[02-prompt-forge-docs-ground.yml](snippets/02-prompt-forge-docs-ground.yml)** | A **Relevant Forge documentation** section with inline links to the official docs. | Your plans too often cite made-up module names. |
 
-> **Which one should you pick?** All three are good — pick the one that fits a gap you noticed when reading your Lab 1 plan. If you're genuinely torn, pick the Testing checklist: it's the most visually obvious change, which makes the "it actually worked" moment unmissable.
+Pick exactly one. (You can layer a second one later; keep this lab small.)
 
-## Step 2 — paste the lab prompt into your coding assistant
+## Step 2 — paste the snippet into `manifest.yml`
 
-Open your coding assistant inside the Codespace — Cursor, Claude Code, Codex, GitHub Copilot CLI, Gemini CLI, or whichever one you prefer. Paste the prompt below and let it drive. (Replace the snippet path with the one you picked in Step 1.)
+1. Open `forge-inspired/implementation-plan-agent/starter/manifest.yml` in the Codespace editor.
+2. Find the `prompt: >` block on `rovo:agent` (around line 11).
+3. Scroll down inside that block until you find step 4 of the `WHEN A USER ASKS YOU TO PLAN AN ISSUE:` pipeline. It lists four section bullets. The last one is **Risks & open questions**.
+4. Open the snippet file you picked in Step 1 and copy its full contents.
+5. Paste the snippet **immediately after** the `**Risks & open questions**` bullet (and its continuation lines), still **inside** step 4.
+6. Save the file.
 
-```text
-Please apply Lab 2 (Customize your agent) to my local Implementation
-Plan Agent checkout.
+> **Indentation is everything.** Your new bullet must start at the same column as the four existing bullets (9 spaces). Bullet continuation lines must start at 13 spaces. If your editor uses tabs, swap them for spaces. `forge lint` will refuse to deploy a misaligned prompt.
 
-I'm in `forge-inspired/implementation-plan-agent/` in a Codespace.
-I've already completed Lab 0 (so `manifest.yml` has my own `app.id`
-and the stock agent is deployed) and Lab 1 (behavior-only, no file
-changes).
+Here's what step 4 should look like once you've pasted the testing-checklist snippet (abridged):
 
-The source-of-truth snippet file is:
+```yaml
+        4. Structure the plan with these sections, in this order:
 
-  docs/labs/snippets/02-prompt-testing-checklist.yml
+           - **Context** ...
 
-Please do the following in order, stopping if any step fails:
+           - **Proposed approach** ...
 
-1. Open `manifest.yml`. Find the `prompt: >` block on `rovo:agent`,
-   then the "WHEN A USER ASKS YOU TO PLAN AN ISSUE:" sequence inside
-   it, then step 4 inside that sequence. Step 4 currently defines
-   four plan sections, ending with the "**Risks & open questions**"
-   bullet.
-2. Insert the full contents of the snippet file above as a new
-   section bullet IMMEDIATELY AFTER the "**Risks & open questions**"
-   bullet. Preserve the surrounding YAML indentation (the prompt body
-   is indented 6 spaces, and the section bullets inside step 4 are
-   indented a further 3 spaces). Do not change anything outside step 4.
-3. Show me the full diff BEFORE saving. Wait for my confirmation
-   before writing.
-4. After I confirm, save the file, run `forge lint` to confirm the
-   YAML is valid, then run `forge deploy` to the default (development)
-   environment.
-5. Do NOT run `forge install --upgrade` — no scopes changed.
+           - **Implementation steps** ...
 
-When you're done, give me:
-- a short list of the files you touched, formatted as clickable
-  relative links (e.g. `[manifest.yml](manifest.yml)`), with one
-  short sentence per file describing what changed,
-- confirmation that `forge lint` passed and `forge deploy` succeeded,
-- a suggested Jira ticket I can invoke the agent on to compare the
-  new plan against my Lab 1 plan.
+           - **Risks & open questions** ...
 
-Do not paste full file contents or long grep output — I'll inspect
-the files myself if I need to.
+           - **Testing checklist** — a short, prescriptive list of tests
+             an engineer should write for this change. Include at least
+             one negative-path and one edge-case test.
 ```
 
-Confirm the diff when the assistant shows it to you. If the new bullet is indented at the same level as the four existing section bullets (**Context / Proposed approach / Implementation steps / Risks & open questions**), you're good.
+Same shape for the other two snippets, just with different section titles and body text.
 
-## Step 3 — rerun Lab 1 and compare
+## Step 3 — lint and deploy
 
-1. Open a Jira ticket — ideally one you *haven't* planned before, so you get a clean comment. Or create a new one using the Lab 1 starter.
+In the Codespace terminal, from `forge-inspired/implementation-plan-agent/starter/`:
+
+```bash
+forge lint
+forge deploy
+```
+
+Both should finish without errors. No `forge install --upgrade` needed (scopes did not change).
+
+## Already written
+
+- The agent's two actions, three scopes, and the surrounding pipeline. Do not change them. The lab is one bullet in step 4, nothing else.
+
+## Step 4 — rerun Lab 1 and compare
+
+1. Open a Jira ticket, ideally one you *haven't* planned before, so you get a clean comment. Or create a new one using the Lab 1 starter.
 2. Invoke the Implementation Plan Agent and ask it to plan the ticket.
 3. Wait for the new comment and read it.
 
 ## Proof checklist
 
-- [ ] The new plan comment contains your added section — the title you added (e.g. **Testing checklist**) appears as a heading in the plan.
+- [ ] The new plan comment contains your added section. The title you added (e.g. **Testing checklist**) appears as a heading in the plan.
 - [ ] The section's content matches the shape your snippet asked for (e.g. a testing checklist actually has at least 4 bulleted tests and includes a negative-path test).
-- [ ] The four original sections (**Context / Proposed approach / Implementation steps / Risks & open questions**) are still there — your edit *extended* the plan, it didn't *replace* parts of it.
+- [ ] The four original sections (**Context / Proposed approach / Implementation steps / Risks & open questions**) are still there. Your edit *extended* the plan, it didn't *replace* parts of it.
 - [ ] Side-by-side with your Lab 1 plan on the same (or a similar) ticket, the Lab 2 plan is visibly richer in the dimension you added.
 
 ## Solution
 
-If your coding assistant can't apply the edit cleanly (malformed YAML or wrong indentation), you can overlay the final-state manifest directly from **[`solution/`](../../solution/)**. The default solution in that folder uses the **testing checklist** customization — if you picked security review or Forge-docs grounding instead, use the matching snippet file in `snippets/`. See [`solution/README.md`](../../solution/README.md) for overlay instructions — in particular, do NOT replace your `manifest.yml` wholesale because it holds your personal `app.id` from Lab 0.
+If your YAML edit won't lint or deploy cleanly, overlay the final-state manifest from **[`solution/`](../../solution/)**. The default solution uses the **testing checklist** customization. If you picked security review or Forge-docs grounding instead, use the matching snippet file. See [`solution/README.md`](../../solution/README.md) for overlay instructions, and in particular do NOT replace your `starter/manifest.yml` wholesale because it holds your personal `app.id` from Lab 0.
 
 ## If you get stuck
 
-- **The new section isn't appearing.** Did `forge deploy` actually finish successfully? Did you give the prompt cache ~30 seconds? Did you paste the snippet INSIDE step 4 (not after the whole sequence)?
-- **Indentation errors.** Run `forge lint` — it will tell you which line YAML can't parse.
-- **The plan has your section but the content is thin.** Your snippet's expectations are the ceiling. If you want more depth, strengthen the snippet (e.g. "at least 6 tests" instead of 4), redeploy, and try again. This is the iteration loop the lab is teaching.
-
-Re-open the snippet file you pasted from and diff your `manifest.yml` section against it. If the YAML won't parse at all, `forge lint` will point at the first offending line. Still stuck? See [docs/reference/TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md) or flag your instructor.
+- **`forge lint` complains about indentation.** Open the diff in your editor and compare your new bullet column-for-column against the four existing bullets. The dash must line up with the other dashes; continuation lines must indent four more spaces beyond the dash.
+- **The new section isn't appearing in plans.** Did `forge deploy` actually finish successfully? Did you give the prompt cache ~30 seconds? Did you paste the snippet INSIDE step 4 (not after the whole sequence)?
+- **Stuck on an error you don't understand?** Hand the error output to your AI coding assistant and ask it to diagnose using the Forge MCP `diagnose-forge-error` tool. Forge MCP consults the authoritative Forge docs for the fix, so you're not guessing.
+- See **[docs/reference/TROUBLESHOOTING.md](../reference/TROUBLESHOOTING.md)** for more.
 
 ## What you just learned
 
 The main takeaway for this whole workshop is this: **the quality of AI-generated work is a function of requirements, context, and iteration.**
 
-- **Requirements** — Lab 1 showed you that a sharper Jira description produces a sharper plan.
-- **Context** — the agent's prompt is the context it brings to every plan. Changing the prompt changes the context every future plan is drafted against.
-- **Iteration** — Lab 2 is literally one iteration. Nothing stops you from doing another: layer in a second snippet, or write your own, or tighten what you added. `forge deploy` is cheap.
+- **Requirements:** Lab 1 showed you that a sharper Jira description produces a sharper plan.
+- **Context:** the agent's prompt is the context it brings to every plan. Changing the prompt changes the context every future plan is drafted against.
+- **Iteration:** Lab 2 is literally one iteration. Nothing stops you from doing another. Layer in a second snippet, or write your own, or tighten what you added. `forge deploy` is cheap.
 
 ## Where to go next
 
-- **Add a second customization.** Pick a different snippet from Step 1 and layer it in. Both will apply to every future plan.
-- **Write your own section.** Mirror the shape of the shipped snippets — a bullet labelled with a bold section name, followed by a few lines explaining what should go in it. Keep it prescriptive.
-- **Tighten the Lab 1 behavior.** Add a short "If the issue description is weaker than X, ask one clarifying question before planning" rule to the prompt.
-- **Try the companion workshop:** **[Forge Guru](../../../forge-guru-agent/README.md)** teaches you to build an agent from the other direction — ideation and writing tickets, instead of reading and planning them.
+- **Try the companion workshop:** **[Forge Guru](../../../forge-guru-agent/README.md)** teaches you to build an agent from the other direction, ideation and writing tickets, instead of reading and planning them.
+- **Take an idea to market.** The **[Build and Launch your Forge App](https://developer.atlassian.com/platform/forge/build-and-launch-your-forge-app/)** guide walks you through packaging a Forge app, listing it on the Atlassian Marketplace, and sharing it with your team.
 
 → **[Back to the workshop index](../../README.md)**

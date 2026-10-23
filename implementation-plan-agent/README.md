@@ -50,7 +50,7 @@ Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)** — including
 4. Check [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md) for the most common issues.
 5. If you're in a live workshop, flag your instructor. Otherwise, [open an issue](https://github.com/atlassian-labs/forge-inspired/issues/new).
 
-> **Heads up on `manifest.yml`.** Lab 0 writes *your* personal app id into your local `manifest.yml`. If you ever paste in a `manifest.yml` from somewhere else (another attendee's copy, a snippet file, an old backup), you'll lose your `app.id` and your deploys will go to someone else's app. Edit the file in place — don't replace it wholesale.
+> **Heads up on `starter/manifest.yml`.** Lab 0 writes *your* personal app id into `starter/manifest.yml`. If you ever paste in a `manifest.yml` from somewhere else (another attendee's copy, the sibling `solution/manifest.yml`, an old backup), you'll lose your `app.id` and your deploys will go to someone else's app. Edit the file in place — don't replace it wholesale.
 
 ## Under the hood (reference)
 
@@ -58,12 +58,15 @@ Snippets live under **[docs/labs/snippets/](docs/labs/snippets/)** — including
 - **Scopes:** `read:jira-work`, `read:jira-user`, `write:jira-work`. Only `post-implementation-plan` ever exercises the write scope.
 - Every Jira call uses `asUser()`, so the agent's effective permissions are bounded by the invoking user's.
 - The write path is deliberately narrow — it only posts comments. It cannot edit the description, transition the issue, or change any field.
-- **Entry points:**
-  - [`manifest.yml`](./manifest.yml) — agent prompt, 2 actions, 3 scopes.
-  - [`src/actions/inspect-issue.js`](./src/actions/inspect-issue.js) — the read path.
-  - [`src/actions/post-implementation-plan.js`](./src/actions/post-implementation-plan.js) — the sole write path.
-  - [`src/jira.js`](./src/jira.js) — shared helpers for base URLs and ADF conversion.
-  - [`src/index.js`](./src/index.js) — exports wiring.
+- **Project layout:** two sibling folders.
+  - [`starter/`](./starter/) is the baseline you deploy in Lab 0 and edit in Lab 2.
+  - [`solution/`](./solution/) is the Lab 2 complete state (Testing checklist customization applied). Use it as a reference if your YAML edit will not lint. See [`solution/README.md`](./solution/README.md) for overlay instructions.
+- **Entry points (inside `starter/`):**
+  - [`starter/manifest.yml`](./starter/manifest.yml) — agent prompt, 2 actions, 3 scopes.
+  - [`starter/src/actions/inspect-issue.js`](./starter/src/actions/inspect-issue.js) — the read path.
+  - [`starter/src/actions/post-implementation-plan.js`](./starter/src/actions/post-implementation-plan.js) — the sole write path.
+  - [`starter/src/jira.js`](./starter/src/jira.js) — shared helpers for base URLs and ADF conversion.
+  - [`starter/src/index.js`](./starter/src/index.js) — exports wiring.
 - **Full command cheatsheet:** [docs/reference/COMMANDS.md](docs/reference/COMMANDS.md).
 - **Common issues:** [docs/reference/TROUBLESHOOTING.md](docs/reference/TROUBLESHOOTING.md).
 

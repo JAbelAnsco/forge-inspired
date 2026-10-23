@@ -1,61 +1,180 @@
-/*
- * Lab 2 — src/index.js handler for the create-ticket action.
- *
- * MERGE this snippet into `src/index.js` as follows:
- *   1. Add `import api, { route } from '@forge/api';` at the TOP of
- *      src/index.js if (and only if) that exact import is not already
- *      there. Do not duplicate it.
- *   2. Append the `baseUrlFromSelf` helper AND the `createTicket`
- *      export at the BOTTOM of src/index.js, alongside the existing
- *      `placeholder` export. Do not delete or modify `placeholder`.
- *   3. Do NOT copy this comment block itself into src/index.js — it's
- *      documentation for the snippet, not part of the handler.
- *
- * This handler is wired up by the `create-ticket-fn` function entry
- * you added in `manifest.yml`.
- */
+// Lab 2 snippet. The `createTicket` action handler, plus two small helpers
+// (tenantUrlFromContext, markdownToAdf) it depends on.
+//
+// Paste the ENTIRE file content below (everything from `import ...` to the
+// closing brace of `createTicket`) into `src/index.js`:
+//
+//   - If `src/index.js` does NOT already contain `import api, { route }
+//     from '@forge/api';` at the top, add it.
+//   - Append the two helpers and the `export async function createTicket`
+//     export to the BOTTOM of the file, after the existing `placeholder`
+//     export.
+//
+// Do NOT remove or edit the existing `placeholder` function. Forge still
+// requires a standalone function module declared in `manifest.yml` under
+// `modules.function`.
 
 import api, { route } from '@forge/api';
 
-// Derive the tenant's Jira base URL from an issue's `self` URL
-// (e.g. "https://acme.atlassian.net/rest/api/3/issue/10042"
-//    →  "https://acme.atlassian.net").
-//
-// This is the canonical pattern used across the Forge Inspired
-// collection (see sprint-ready-agent / implementation-plan-agent /
-// team-pulse-board). Rovo action handlers do NOT get a user-facing
-// `siteUrl` on the context object, and the `cloudId` is an internal
-// UUID — so the right way to produce a browsable link is to parse
-// the hostname out of a Jira response's `self` field.
-function baseUrlFromSelf(selfUrl) {
-  if (!selfUrl) return '';
+// ─── tenantUrlFromContext. Pull the real Jira tenant origin from the Rovo
+// invocation context. We cannot build the browse URL from Jira's `self`
+// response field because api.asUser().requestJira() goes through a Forge
+// proxy and the returned `self` has a proxy hostname, not the tenant.
+// Rovo always passes the real current-page URL in args.context.jira.url.
+const tenantUrlFromContext = (context) => {
+  const url = context?.jira?.url;
+  if (!url || typeof url !== 'string') return null;
   try {
-    const u = new URL(selfUrl);
-    return `${u.protocol}//${u.host}`;
+    const parsed = new URL(url);
+    return `${parsed.protocol}//${parsed.host}`;
   } catch {
-    return '';
+    return null;
   }
-}
+};
 
-export const createTicket = async ({ payload }) => {
-  // ─── Instrumentation ────────────────────────────────────────────────
-  // The single most important log in this whole handler: if you ask
-  // Forge Guru to file a ticket and this line never shows up in
-  // `forge logs`, the agent never called the action — the problem is
-  // prompt-side, not handler-side. If this line DOES show up but the
-  // next ones don't, read on down to see which check tripped.
+// ─── markdownToAdf. Minimal Markdown to ADF converter. Jira's
+// /rest/api/3/issue endpoint only accepts ADF (Atlassian Document Format)
+// for the description field, not Markdown. Sending Markdown as a single
+// ADF text node stores the literal ** and - characters verbatim.
+//
+// Deliberately dependency-free. Supports exactly:
+//   - `**bold**` runs inside paragraphs
+//   - `` `inline code` `` runs inside paragraphs
+//   - Paragraph breaks on blank lines (and on lines that start with a
+//     bold field label like `**Problem:**`)
+//   - Bullet lists starting with `- `
+//   - Numbered lists starting with `1. `, `2. `, etc.
+// Not supported: headings, links, nested lists, tables, block quotes,
+// horizontal rules, fenced code blocks.
+const inlineRunsToAdf = (text) => {
+  const nodes = [];
+  const regex = /(\*\*[^*]+\*\*|`[^`]+`)/g;
+  let lastIndex = 0;
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      nodes.push({ type: 'text', text: text.slice(lastIndex, match.index) });
+    }
+    const token = match[0];
+    if (token.startsWith('**')) {
+      nodes.push({
+        type: 'text',
+        text: token.slice(2, -2),
+        marks: [{ type: 'strong' }],
+      });
+    } else {
+      nodes.push({
+        type: 'text',
+        text: token.slice(1, -1),
+        marks: [{ type: 'code' }],
+      });
+    }
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < text.length) {
+    nodes.push({ type: 'text', text: text.slice(lastIndex) });
+  }
+  if (nodes.length === 0) nodes.push({ type: 'text', text: '' });
+  return nodes;
+};
+
+const markdownToAdf = (markdown) => {
+  const lines = String(markdown ?? '').split('\n');
+  const blocks = [];
+  let currentList = null;
+  let currentPara = null;
+
+  const flushPara = () => {
+    if (currentPara !== null && currentPara.length > 0) {
+      blocks.push({
+        type: 'paragraph',
+        content: inlineRunsToAdf(currentPara.join(' ')),
+      });
+    }
+    currentPara = null;
+  };
+  const flushList = () => {
+    if (currentList) {
+      blocks.push(currentList);
+      currentList = null;
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trimEnd();
+    if (line === '') {
+      flushPara();
+      flushList();
+      continue;
+    }
+    const bulletMatch = line.match(/^-\s+(.*)$/);
+    const orderedMatch = line.match(/^\d+\.\s+(.*)$/);
+    if (bulletMatch) {
+      flushPara();
+      if (!currentList || currentList.type !== 'bulletList') {
+        flushList();
+        currentList = { type: 'bulletList', content: [] };
+      }
+      currentList.content.push({
+        type: 'listItem',
+        content: [{ type: 'paragraph', content: inlineRunsToAdf(bulletMatch[1]) }],
+      });
+    } else if (orderedMatch) {
+      flushPara();
+      if (!currentList || currentList.type !== 'orderedList') {
+        flushList();
+        currentList = { type: 'orderedList', content: [] };
+      }
+      currentList.content.push({
+        type: 'listItem',
+        content: [{ type: 'paragraph', content: inlineRunsToAdf(orderedMatch[1]) }],
+      });
+    } else {
+      flushList();
+      // Field-label lines like `**Problem:** ...` start a new paragraph
+      // even without a blank line before them. The agent emits these
+      // one-per-line without separators, and joining them into a single
+      // paragraph produces an unreadable wall of text.
+      const isFieldLabelLine = /^\*\*[^*]+:\*\*/.test(line);
+      if (isFieldLabelLine) flushPara();
+      if (currentPara === null) currentPara = [];
+      currentPara.push(line);
+    }
+  }
+  flushPara();
+  flushList();
+
+  return {
+    type: 'doc',
+    version: 1,
+    content: blocks.length > 0
+      ? blocks
+      : [{ type: 'paragraph', content: [{ type: 'text', text: '' }] }],
+  };
+};
+
+// ─── createTicket. The Rovo action handler.
+//
+// Inputs the agent MUST supply (declared in manifest.yml inputs: block):
+//   - projectKey : string   e.g. "FORGE"
+//   - summary    : string   one-line title
+//   - description: string   full ticket body as Markdown
+//   - issueType  : string   (optional) defaults to "Task"
+//
+// Named-function form, not arrow, to match the pattern every other
+// working Forge app in this repo uses. Inputs arrive FLAT on the first
+// argument (args.projectKey, not args.payload.projectKey).
+export async function createTicket(args) {
   console.log('[create-ticket] handler invoked', {
-    projectKey: payload?.projectKey,
-    summary: payload?.summary,
-    descriptionLength: payload?.description?.length ?? 0,
-    issueType: payload?.issueType,
+    argKeys: args ? Object.keys(args) : null,
+    projectKey: args?.projectKey,
+    summary: args?.summary,
+    descriptionLength: args?.description?.length ?? 0,
+    issueType: args?.issueType,
   });
 
-  // The agent (via the manifest `inputs` block) hands us these fields.
-  const { projectKey, summary, description, issueType } = payload || {};
+  const { projectKey, summary, description, issueType, context } = args || {};
 
-  // Defensive input checks — a bad input shape should fail fast and loud,
-  // not create a mystery 400 on the Jira call.
   if (!projectKey || !summary || !description) {
     console.warn('[create-ticket] missing required inputs — returning error', {
       hasProjectKey: !!projectKey,
@@ -68,32 +187,20 @@ export const createTicket = async ({ payload }) => {
     };
   }
 
+  const normalizedKey = String(projectKey).toUpperCase();
+  const effectiveIssueType = (issueType && String(issueType).trim()) || 'Task';
+
   console.log('[create-ticket] POST /rest/api/3/issue', {
-    projectKey: projectKey.toUpperCase(),
-    issueType: issueType || 'Task',
+    projectKey: normalizedKey,
+    issueType: effectiveIssueType,
   });
 
-  // We call Jira as the invoking user (`.asUser()`), not as the app.
-  // That means the user needs real create-issue permission on the project;
-  // the ticket's reporter will be them, not the app. This is the right
-  // default — it keeps the app's effective permissions bounded by the user's.
   const body = {
     fields: {
-      project: { key: projectKey.toUpperCase() },
-      summary,
-      // Jira wants ADF for descriptions. We wrap the Markdown-ish text
-      // as a single paragraph node — enough for a workshop, not pretty.
-      description: {
-        type: 'doc',
-        version: 1,
-        content: [
-          {
-            type: 'paragraph',
-            content: [{ type: 'text', text: description }],
-          },
-        ],
-      },
-      issuetype: { name: issueType || 'Task' },
+      project: { key: normalizedKey },
+      summary: String(summary),
+      description: markdownToAdf(description),
+      issuetype: { name: effectiveIssueType },
     },
   };
 
@@ -101,32 +208,24 @@ export const createTicket = async ({ payload }) => {
     .asUser()
     .requestJira(route`/rest/api/3/issue`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(body),
     });
 
-  // Jira returns 201 on success. Anything else is an error we should
-  // surface back to the agent so it can explain what happened.
   if (!response.ok) {
-    const text = await response.text();
-    console.error('create-ticket: Jira POST failed', {
+    const errorBody = await response.text();
+    console.error('[create-ticket] Jira POST failed', {
       status: response.status,
-      body: text,
+      body: errorBody,
     });
-    return {
-      ok: false,
-      status: response.status,
-      error: text,
-    };
+    return { ok: false, error: `Jira returned ${response.status}: ${errorBody}` };
   }
 
-  // The Jira create-issue response gives us { id, key, self }.
-  // `self` is a fully-qualified URL on the user's tenant, which is the
-  // ONLY reliable source of the tenant hostname inside a Rovo action
-  // handler. We derive the browsable URL from it directly — no second
-  // API call needed.
   const created = await response.json();
-  const baseUrl = baseUrlFromSelf(created.self);
+  const baseUrl = tenantUrlFromContext(context);
   const browseUrl = baseUrl ? `${baseUrl}/browse/${created.key}` : null;
 
   console.log('[create-ticket] Jira issue created', {
@@ -141,4 +240,4 @@ export const createTicket = async ({ payload }) => {
     id: created.id,
     url: browseUrl,
   };
-};
+}
