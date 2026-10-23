@@ -5,9 +5,9 @@
  *   1. Add `import api, { route } from '@forge/api';` at the TOP of
  *      src/index.js if (and only if) that exact import is not already
  *      there. Do not duplicate it.
- *   2. Append the `createTicket` export at the BOTTOM of src/index.js,
- *      alongside the existing `placeholder` export. Do not delete or
- *      modify `placeholder`.
+ *   2. Append the `baseUrlFromSelf` helper AND the `createTicket`
+ *      export at the BOTTOM of src/index.js, alongside the existing
+ *      `placeholder` export. Do not delete or modify `placeholder`.
  *   3. Do NOT copy this comment block itself into src/index.js — it's
  *      documentation for the snippet, not part of the handler.
  *
@@ -17,7 +17,27 @@
 
 import api, { route } from '@forge/api';
 
-export const createTicket = async ({ payload, context }) => {
+// Derive the tenant's Jira base URL from an issue's `self` URL
+// (e.g. "https://acme.atlassian.net/rest/api/3/issue/10042"
+//    →  "https://acme.atlassian.net").
+//
+// This is the canonical pattern used across the Forge Inspired
+// collection (see sprint-ready-agent / implementation-plan-agent /
+// team-pulse-board). Rovo action handlers do NOT get a user-facing
+// `siteUrl` on the context object, and the `cloudId` is an internal
+// UUID — so the right way to produce a browsable link is to parse
+// the hostname out of a Jira response's `self` field.
+function baseUrlFromSelf(selfUrl) {
+  if (!selfUrl) return '';
+  try {
+    const u = new URL(selfUrl);
+    return `${u.protocol}//${u.host}`;
+  } catch {
+    return '';
+  }
+}
+
+export const createTicket = async ({ payload }) => {
   // The agent (via the manifest `inputs` block) hands us these fields.
   const { projectKey, summary, description, issueType } = payload || {};
 
@@ -77,17 +97,14 @@ export const createTicket = async ({ payload, context }) => {
     };
   }
 
+  // The Jira create-issue response gives us { id, key, self }.
+  // `self` is a fully-qualified URL on the user's tenant, which is the
+  // ONLY reliable source of the tenant hostname inside a Rovo action
+  // handler. We derive the browsable URL from it directly — no second
+  // API call needed.
   const created = await response.json();
-
-  // Reconstruct a browsable URL for the agent to render as a link.
-  // `context` carries the site's base URL for us — no hardcoding.
-  const siteUrl =
-    context?.siteUrl ||
-    (context?.cloudId
-      ? `https://api.atlassian.com/ex/jira/${context.cloudId}`
-      : null);
-
-  const browseUrl = siteUrl ? `${siteUrl}/browse/${created.key}` : null;
+  const baseUrl = baseUrlFromSelf(created.self);
+  const browseUrl = baseUrl ? `${baseUrl}/browse/${created.key}` : null;
 
   return {
     ok: true,

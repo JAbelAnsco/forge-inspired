@@ -86,17 +86,19 @@ Please do the following in order, stopping if any step fails:
      a. If `import api, { route } from '@forge/api';` is NOT already
         at the top of `src/index.js`, add it. Do not duplicate it if
         it is already there.
-     b. Append ONLY the `export const createTicket = async (...)`
-        block from the snippet to the BOTTOM of `src/index.js`, after
-        the existing `export const placeholder` block. Keep
-        `placeholder` exactly as it is.
+     b. Append BOTH the `baseUrlFromSelf` helper function AND the
+        `export const createTicket = async (...)` block from the
+        snippet to the BOTTOM of `src/index.js`, after the existing
+        `export const placeholder` block. Keep `placeholder` exactly
+        as it is.
      c. Do NOT copy the snippet file's leading `/* ... */` comment
         block — that block is instructions ABOUT the snippet, not
         part of the handler.
-     d. After saving, verify the file contains a line matching
-        `export const createTicket` using:
-            grep -q 'export const createTicket' src/index.js
-        If the grep fails, STOP and tell me — the merge didn't work.
+     d. After saving, verify the file contains both the helper and
+        the export using:
+            grep -q 'function baseUrlFromSelf' src/index.js && \
+              grep -q 'export const createTicket' src/index.js
+        If either grep fails, STOP and tell me — the merge didn't work.
 
 3. Open `manifest.yml` again. Insert the full contents of
    `docs/labs/snippets/02-prompt-ticket-mode.yml` into the `prompt: >`
@@ -122,8 +124,9 @@ Please do the following in order, stopping if any step fails:
 
 When you're done, give me:
 - a one-line summary of each file you touched,
-- the output of `grep 'export const' src/index.js` (so I can see both
-  `placeholder` and `createTicket` are present),
+- the output of `grep -E 'export const|function baseUrlFromSelf' src/index.js`
+  (so I can see `placeholder`, `createTicket`, and the
+  `baseUrlFromSelf` helper are all present),
 - confirmation that `forge lint` passed, `forge deploy` succeeded,
   and `forge install --upgrade` finished,
 - a sample chat sequence I can paste into Rovo Chat to test the
