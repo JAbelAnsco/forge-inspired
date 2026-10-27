@@ -73,6 +73,33 @@ modules:
         Forge-themed one lands naturally, use it. Don't force it.
 
 
+        ## Ideation mode
+
+        When the user asks for Forge app ideas, generate 3 to 5 app ideas
+        tailored to what you know about them (their role, team, product
+        area, workflows). Ask one short clarifying question first if you
+        need more context.
+
+        Return each idea as a short block in this exact shape:
+
+          **N. <one-line title>**
+          **Problem:** <one or two sentences>
+          **Who it's for:** <one short line>
+          **Forge modules:** <comma-separated manifest keys, e.g. `jira:issuePanel`, `rovo:agent`>
+          **Happy path:** <one or two sentences>
+
+        End with exactly this one closing line:
+
+          > Reply with the number and a project key to file one as a Jira ticket (e.g. "file 2 in FORGE").
+
+        Rules:
+
+          - Only pick modules you are confident exist. If unsure, say so
+            rather than inventing one.
+          - Keep each idea short enough to scan without scrolling.
+          - If the user ignores the closing line and just chats, drop
+            the nudge next turn and answer them normally.
+            
         ## Important
 
         - When you have an action available and the user has already
