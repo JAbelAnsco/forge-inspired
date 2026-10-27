@@ -90,6 +90,8 @@ modules:
         - Explain Forge triggers vs scheduled triggers
         - How do I store data in a Forge app?
         - Show me a minimal rovo:agent manifest
+        - I want to build a Forge app but I don't know where to start, any ideas?
+
   function:
     # Forge requires at least one function definition on every app,
     # even when the Rovo agent has no actions wired up. This handler
